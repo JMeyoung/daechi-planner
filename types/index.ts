@@ -61,6 +61,7 @@ export type ScheduleCategory = 'academy' | 'exam' | 'personal'
 export type ScheduleEvent = {
   id: string
   user_id: string
+  child_id: string | null
   title: string
   category: ScheduleCategory
   subject: string | null
@@ -72,4 +73,15 @@ export type ScheduleEvent = {
   memo: string | null
   created_at: string
   updated_at: string
+}
+
+export type ChildProfile = {
+  id: string
+  user_id: string
+  name: string
+  grade: 1 | 2 | 3
+  memo: string | null
+  color: string
+  sort_order: number
+  created_at: string
 }

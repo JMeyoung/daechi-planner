@@ -1,8 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { DOT_COLOR } from '@/lib/child-colors'
+import type { ChildProfile } from '@/types'
 
 const DAYS_KO = ['일', '월', '화', '수', '목', '금', '토']
 const CATEGORIES = [
@@ -24,6 +26,17 @@ export default function NewSchedulePage() {
   const [error, setError] = useState('')
   const [isRecurring, setIsRecurring] = useState(false)
   const [recurDays, setRecurDays] = useState<number[]>([])
+  const [children, setChildren] = useState<ChildProfile[]>([])
+  const [childId, setChildId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.from('child_profiles').select('*').order('sort_order').then(({ data }) => {
+      const list = (data ?? []) as ChildProfile[]
+      setChildren(list)
+      if (list.length === 1) setChildId(list[0].id)
+    })
+  }, [])
 
   const [form, setForm] = useState({
     title: '',
@@ -61,6 +74,7 @@ export default function NewSchedulePage() {
 
     const { error: err } = await supabase.from('schedule_events').insert({
       user_id:      user.id,
+      child_id:     childId,
       title:        form.title.trim(),
       category:     form.category,
       subject:      form.subject.trim()  || null,
@@ -97,6 +111,41 @@ export default function NewSchedulePage() {
             className={input}
           />
         </div>
+
+        {/* 자녀 선택 */}
+        {children.length > 0 && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">자녀</label>
+            <div className="flex gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setChildId(null)}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                  childId === null
+                    ? 'bg-gray-900 text-white border-gray-900'
+                    : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                선택 안 함
+              </button>
+              {children.map(child => (
+                <button
+                  key={child.id}
+                  type="button"
+                  onClick={() => setChildId(child.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                    childId === child.id
+                      ? 'bg-gray-900 text-white border-gray-900'
+                      : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'
+                  }`}
+                >
+                  <span className={`w-2 h-2 rounded-full ${DOT_COLOR[child.color] ?? 'bg-blue-400'}`} />
+                  {child.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 종류 */}
         <div>

@@ -12,15 +12,87 @@
   }
 
   body {
-    @apply text-gray-900 bg-white;
+    @apply text-gray-900 bg-white font-sans antialiased;
+  }
+
+  /* Refined scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+
+  /* Reduced motion — disable all animations */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
 @layer utilities {
+  /* ── Typography ─────────────────────────── */
   .prose-content h2 {
     @apply text-xl font-bold mt-8 mb-3;
   }
+  .prose-content h3 {
+    @apply text-lg font-semibold mt-6 mb-2;
+  }
   .prose-content p {
-    @apply leading-relaxed mb-4;
+    @apply leading-[1.85] mb-4 text-gray-700;
+  }
+  .prose-content ul {
+    @apply list-disc pl-5 mb-4 space-y-1;
+  }
+  .prose-content li {
+    @apply text-gray-700 leading-relaxed;
+  }
+
+  /* ── Hero noise overlay ─────────────────── */
+  .hero-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  /* ── Card lift ───────────────────────────── */
+  .card-lift {
+    @apply bg-white rounded-2xl shadow-card border border-transparent
+           transition-all duration-200 ease-out
+           hover:-translate-y-1 hover:shadow-card-hover hover:border-surface-border;
+  }
+  .card-lift:active {
+    @apply translate-y-0 shadow-card;
+  }
+
+  /* ── CTA button ─────────────────────────── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-cta-gradient text-white font-semibold rounded-full
+           shadow-cta px-6 py-3
+           transition-all duration-200 ease-out
+           hover:-translate-y-px hover:shadow-cta-hover
+           active:translate-y-0 active:shadow-cta
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure-500 focus-visible:ring-offset-2;
+  }
+  .btn-ghost-white {
+    @apply inline-flex items-center justify-center gap-2
+           text-white border border-white/30 backdrop-blur-sm bg-white/10
+           font-medium rounded-full px-6 py-3
+           transition-all duration-200 ease-out
+           hover:bg-white/20;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2
+           text-azure-700 border border-azure-700 font-medium rounded-full px-6 py-3
+           transition-all duration-200 ease-out
+           hover:bg-azure-50;
+  }
+
+  /* ── Section label ──────────────────────── */
+  .section-eyebrow {
+    @apply text-xs font-semibold tracking-widest uppercase text-azure-400;
   }
 }

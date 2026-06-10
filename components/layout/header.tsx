@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 const NAV_LINKS = [
@@ -15,7 +15,21 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
   const pathname = usePathname()
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const supabase = createClient()
+
+  const isHome = pathname === '/'
+
+  useEffect(() => {
+    if (!isHome) {
+      setScrolled(true)
+      return
+    }
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [isHome])
 
   async function handleSignOut() {
     await supabase.auth.signOut()
@@ -23,11 +37,20 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
     router.refresh()
   }
 
+  const headerBase = 'sticky top-0 z-50 transition-all duration-300'
+  const headerScrolled = 'bg-white/90 backdrop-blur-md border-b border-surface-border shadow-header'
+  const headerTransparent = 'bg-transparent border-b border-transparent'
+
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
+    <header className={`${headerBase} ${scrolled ? headerScrolled : headerTransparent}`}>
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="font-bold text-lg text-blue-700 tracking-tight">
+        <Link
+          href="/"
+          className={`font-display font-bold text-lg tracking-tight transition-colors ${
+            scrolled || !isHome ? 'text-azure-700' : 'text-white'
+          }`}
+        >
           대치 플래너
         </Link>
 
@@ -37,8 +60,14 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
             <Link
               key={link.href}
               href={link.href}
-              className={`transition-colors hover:text-blue-700 ${
-                pathname === link.href ? 'text-blue-700 font-medium' : 'text-gray-600'
+              className={`transition-colors font-medium ${
+                scrolled || !isHome
+                  ? pathname === link.href
+                    ? 'text-azure-700'
+                    : 'text-gray-500 hover:text-azure-700'
+                  : pathname === link.href
+                    ? 'text-white'
+                    : 'text-white/70 hover:text-white'
               }`}
             >
               {link.label}
@@ -52,13 +81,17 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
             <>
               <Link
                 href="/dashboard"
-                className="text-sm text-gray-600 hover:text-blue-700 transition-colors"
+                className={`text-sm font-medium transition-colors ${
+                  scrolled || !isHome ? 'text-gray-600 hover:text-azure-700' : 'text-white/80 hover:text-white'
+                }`}
               >
                 내 플래너
               </Link>
               <button
                 onClick={handleSignOut}
-                className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                className={`text-sm transition-colors ${
+                  scrolled || !isHome ? 'text-gray-400 hover:text-gray-600' : 'text-white/60 hover:text-white'
+                }`}
               >
                 로그아웃
               </button>
@@ -67,13 +100,19 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
             <>
               <Link
                 href="/login"
-                className="text-sm text-gray-600 hover:text-blue-700 transition-colors"
+                className={`text-sm font-medium transition-colors ${
+                  scrolled || !isHome ? 'text-gray-600 hover:text-azure-700' : 'text-white/80 hover:text-white'
+                }`}
               >
                 로그인
               </Link>
               <Link
                 href="/login?signup=1"
-                className="text-sm bg-blue-700 text-white px-4 py-1.5 rounded-full hover:bg-blue-800 transition-colors"
+                className={`text-sm font-semibold px-4 py-1.5 rounded-full transition-all duration-200 ${
+                  scrolled || !isHome
+                    ? 'bg-azure-600 text-white shadow-cta hover:shadow-cta-hover hover:-translate-y-px'
+                    : 'bg-white text-azure-700 hover:bg-azure-50'
+                }`}
               >
                 무료로 시작
               </Link>
@@ -83,43 +122,53 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
 
         {/* Mobile menu button */}
         <button
-          className="md:hidden p-2 text-gray-600"
+          className={`md:hidden p-2 transition-colors ${
+            scrolled || !isHome ? 'text-gray-600' : 'text-white'
+          }`}
           onClick={() => setMenuOpen(v => !v)}
           aria-label="메뉴"
+          aria-expanded={menuOpen}
         >
-          <span className="block w-5 h-0.5 bg-current mb-1" />
-          <span className="block w-5 h-0.5 bg-current mb-1" />
-          <span className="block w-5 h-0.5 bg-current" />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+            {menuOpen ? (
+              <path d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
         </button>
       </div>
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white px-4 py-3 space-y-3">
+        <div className="md:hidden border-t border-surface-border bg-white/95 backdrop-blur-md px-4 py-3 space-y-1">
           {NAV_LINKS.map(link => (
             <Link
               key={link.href}
               href={link.href}
-              className="block text-sm text-gray-700 py-1"
+              className={`block text-sm py-2 font-medium transition-colors rounded-lg px-2 ${
+                pathname === link.href
+                  ? 'text-azure-700 bg-azure-50'
+                  : 'text-gray-700 hover:text-azure-700 hover:bg-surface-50'
+              }`}
               onClick={() => setMenuOpen(false)}
             >
               {link.label}
             </Link>
           ))}
-          <div className="pt-2 border-t border-gray-100 flex flex-col gap-2">
+          <div className="pt-2 border-t border-surface-border flex flex-col gap-2 mt-1">
             {userEmail ? (
               <>
-                <Link href="/dashboard" className="text-sm text-gray-700">내 플래너</Link>
-                <button onClick={handleSignOut} className="text-sm text-gray-500 text-left">
-                  로그아웃
-                </button>
+                <Link href="/dashboard" className="text-sm text-gray-700 font-medium py-2 px-2" onClick={() => setMenuOpen(false)}>내 플래너</Link>
+                <button onClick={handleSignOut} className="text-sm text-gray-500 text-left py-2 px-2">로그아웃</button>
               </>
             ) : (
               <>
-                <Link href="/login" className="text-sm text-gray-700">로그인</Link>
+                <Link href="/login" className="text-sm text-gray-700 py-2 px-2" onClick={() => setMenuOpen(false)}>로그인</Link>
                 <Link
                   href="/login?signup=1"
-                  className="text-sm bg-blue-700 text-white px-4 py-2 rounded-full text-center"
+                  className="text-sm bg-azure-600 text-white font-semibold px-4 py-2 rounded-full text-center shadow-cta"
+                  onClick={() => setMenuOpen(false)}
                 >
                   무료로 시작
                 </Link>

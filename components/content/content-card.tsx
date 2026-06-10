@@ -14,32 +14,48 @@ function formatDate(dateString: string) {
   })
 }
 
+function LockIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="w-4 h-4 text-gray-400"
+      aria-label="잠금"
+    >
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  )
+}
+
 export default function ContentCard({ item, showLock = true }: ContentCardProps) {
   const isLocked = showLock && item.is_premium
 
   return (
     <Link
       href={isLocked ? '/pricing' : `/briefings/${item.id}`}
-      className="block group bg-white border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-sm transition-all"
+      className="block group card-lift p-5"
     >
-      <div className="flex items-start justify-between gap-2 mb-2">
+      <div className="flex items-start justify-between gap-2 mb-2.5">
         <div className="flex items-center gap-1.5 flex-wrap">
           <Badge category={item.category} />
           {item.is_premium && (
             <Badge variant="orange">프리미엄</Badge>
           )}
         </div>
-        {isLocked && (
-          <span className="text-gray-400 shrink-0 text-base" aria-label="잠금">🔒</span>
-        )}
+        {isLocked && <LockIcon />}
       </div>
 
-      <h3 className={`font-medium text-gray-900 group-hover:text-blue-700 transition-colors leading-snug mb-1 ${isLocked ? 'opacity-60' : ''}`}>
+      <h3 className={`font-semibold text-[15px] leading-[1.4] text-gray-900 group-hover:text-azure-700 transition-colors mb-1.5 ${isLocked ? 'opacity-50' : ''}`}>
         {item.title}
       </h3>
 
       {item.summary && (
-        <p className={`text-sm text-gray-500 line-clamp-2 mb-3 ${isLocked ? 'opacity-50' : ''}`}>
+        <p className={`text-sm text-gray-500 leading-relaxed line-clamp-2 mb-3 ${isLocked ? 'opacity-40' : ''}`}>
           {isLocked ? '프리미엄 회원에게만 공개됩니다.' : item.summary}
         </p>
       )}

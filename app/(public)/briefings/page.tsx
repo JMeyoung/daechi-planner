@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getUser } from '@/lib/supabase/server'
 import ContentCard from '@/components/content/content-card'
 import type { ContentSummary } from '@/types'
 
@@ -13,15 +13,26 @@ const CATEGORIES = [
   { value: 'event', label: '행사' },
 ] as const
 
-type SearchParams = { category?: string }
+type SearchParams = { category?: string; q?: string }
 
 export default async function BriefingsPage({
   searchParams,
 }: {
   searchParams: Promise<SearchParams>
 }) {
-  const { category } = await searchParams
-  const supabase = await createClient()
+  const { category, q } = await searchParams
+  const [user, supabase] = await Promise.all([getUser(), createClient()])
+
+  // 구독 상태 — 프리미엄 회원에겐 잠금 표시 안 함
+  let isPremium = false
+  if (user) {
+    const { data: sub } = await supabase
+      .from('subscriptions')
+      .select('plan, status')
+      .eq('user_id', user.id)
+      .single()
+    isPremium = sub?.plan === 'premium' && sub?.status === 'active'
+  }
 
   let query = supabase
     .from('content_items')
@@ -33,39 +44,109 @@ export default async function BriefingsPage({
     query = query.eq('category', category)
   }
 
+  // PostgREST or() 문법과 충돌하는 문자는 제거
+  const search = q?.replace(/[,()%]/g, '').trim()
+  if (search) {
+    query = query.or(`title.ilike.%${search}%,summary.ilike.%${search}%`)
+  }
+
   const { data } = await query
   const items = (data ?? []) as ContentSummary[]
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">브리프 둘러보기</h1>
-        <p className="text-gray-500 text-sm">대치동 교육 정보를 큐레이션해서 전달합니다.</p>
+      {/* Page header */}
+      <div className="mb-8 pb-6 border-b border-surface-border">
+        <p className="section-eyebrow mb-2">대치동 에디터 픽</p>
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h1 className="font-display text-2xl font-bold text-gray-900 mb-1">브리프 둘러보기</h1>
+            <p className="text-gray-500 text-sm">대치동 교육 정보를 큐레이션해서 전달합니다.</p>
+          </div>
+          {/* Result count */}
+          {(search || category) && (
+            <p className="text-sm text-gray-400 shrink-0">
+              {items.length}건
+            </p>
+          )}
+        </div>
       </div>
 
-      {/* Category filter */}
-      <div className="flex gap-2 flex-wrap mb-6">
-        {CATEGORIES.map(cat => (
-          <a
-            key={cat.value}
-            href={cat.value ? `?category=${cat.value}` : '/briefings'}
-            className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-              (category ?? '') === cat.value
-                ? 'bg-blue-700 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
+      {/* Search */}
+      <form action="/briefings" method="get" className="mb-5">
+        {category && <input type="hidden" name="category" value={category} />}
+        <div className="relative max-w-md">
+          <input
+            type="search"
+            name="q"
+            defaultValue={q ?? ''}
+            placeholder="제목·내용 검색"
+            className="w-full bg-surface-50 border border-surface-border rounded-2xl pl-4 pr-12 py-3 text-sm
+                       focus:outline-none focus:border-azure-400 focus:ring-2 focus:ring-azure-100
+                       transition-all placeholder:text-gray-400"
+          />
+          <button
+            type="submit"
+            aria-label="검색"
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center
+                       rounded-xl bg-azure-600 text-white shadow-sm hover:shadow-cta transition-all"
           >
-            {cat.label}
-          </a>
-        ))}
+            <svg viewBox="0 0 24 24" fill="none" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+          </button>
+        </div>
+      </form>
+
+      {/* Category filter chips */}
+      <div className="flex gap-2 flex-wrap mb-8">
+        {CATEGORIES.map(cat => {
+          const params = new URLSearchParams()
+          if (cat.value) params.set('category', cat.value)
+          if (q) params.set('q', q)
+          const qs = params.toString()
+          const isActive = (category ?? '') === cat.value
+          return (
+            <a
+              key={cat.value}
+              href={qs ? `/briefings?${qs}` : '/briefings'}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-150 ${
+                isActive
+                  ? 'bg-azure-600 text-white border-azure-600 shadow-[0_2px_8px_rgba(37,99,235,0.3)]'
+                  : 'bg-surface-50 text-gray-600 border-surface-border hover:border-azure-300 hover:text-azure-700'
+              }`}
+            >
+              {cat.label}
+            </a>
+          )
+        })}
       </div>
 
+      {/* Content grid */}
       {items.length === 0 ? (
-        <p className="text-center text-gray-400 py-16">콘텐츠가 없습니다.</p>
+        <div className="text-center py-20">
+          <div className="w-12 h-12 rounded-2xl bg-surface-100 flex items-center justify-center mx-auto mb-4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6 text-gray-400">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+            </svg>
+          </div>
+          <p className="text-gray-500 font-medium mb-1">
+            {search ? `"${search}"에 대한 결과가 없습니다` : '콘텐츠가 없습니다'}
+          </p>
+          {search && (
+            <a href="/briefings" className="text-sm text-azure-600 hover:underline font-medium">전체 보기</a>
+          )}
+        </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {items.map(item => (
-            <ContentCard key={item.id} item={item} />
+          {items.map((item, i) => (
+            <div
+              key={item.id}
+              className="animate-fade-up"
+              style={{ animationDelay: `${Math.min(i * 50, 300)}ms` }}
+            >
+              <ContentCard item={item} showLock={!isPremium} />
+            </div>
           ))}
         </div>
       )}

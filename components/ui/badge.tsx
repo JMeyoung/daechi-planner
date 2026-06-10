@@ -1,11 +1,11 @@
 type BadgeVariant = 'blue' | 'green' | 'orange' | 'gray' | 'red'
 
 const VARIANT_CLASSES: Record<BadgeVariant, string> = {
-  blue:   'bg-blue-50 text-blue-700',
+  blue:   'bg-azure-50 text-azure-700',
   green:  'bg-green-50 text-green-700',
-  orange: 'bg-orange-50 text-orange-700',
-  gray:   'bg-gray-100 text-gray-600',
-  red:    'bg-red-50 text-red-700',
+  orange: 'bg-orange-50 text-orange-600',
+  gray:   'bg-surface-100 text-gray-500',
+  red:    'bg-red-50 text-red-600',
 }
 
 const CATEGORY_VARIANT: Record<string, BadgeVariant> = {
@@ -34,7 +34,7 @@ export default function Badge({ children, variant = 'gray', category, className 
   const label = category ? CATEGORY_LABEL[category] : children
 
   return (
-    <span className={`inline-block px-2 py-0.5 text-xs font-medium rounded-md ${VARIANT_CLASSES[resolvedVariant]} ${className}`}>
+    <span className={`inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full ${VARIANT_CLASSES[resolvedVariant]} ${className}`}>
       {label}
     </span>
   )

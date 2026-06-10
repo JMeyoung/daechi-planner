@@ -62,67 +62,98 @@ export default async function BriefingDetailPage({ params }: Props) {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
-      <Link href="/briefings" className="text-sm text-blue-700 hover:underline mb-6 inline-block">
-        ← 목록으로
+      {/* Back link */}
+      <Link
+        href="/briefings"
+        className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-azure-600 mb-8 transition-colors font-medium animate-fade-in"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
+          <path d="M19 12H5M12 5l-7 7 7 7" />
+        </svg>
+        목록으로
       </Link>
 
       <article>
-        <div className="flex items-center gap-2 mb-3">
+        {/* Meta */}
+        <div className="flex items-center gap-2 mb-4 animate-fade-up">
           <Badge category={content.category} />
           {content.is_premium && <Badge variant="orange">프리미엄</Badge>}
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-2 leading-snug">{content.title}</h1>
+        {/* Title */}
+        <h1 className="font-display text-2xl font-bold text-gray-900 mb-3 leading-snug animate-fade-up-1">
+          {content.title}
+        </h1>
 
+        {/* Summary */}
         {content.summary && (
-          <p className="text-gray-500 text-base mb-2 leading-relaxed">{content.summary}</p>
+          <p className="text-gray-500 text-[15px] mb-3 leading-relaxed animate-fade-up-1">
+            {content.summary}
+          </p>
         )}
 
+        {/* Date */}
         {content.published_at && (
-          <p className="text-sm text-gray-400 mb-6">{formatDate(content.published_at)}</p>
+          <p className="text-sm text-gray-400 mb-7 animate-fade-up-1">{formatDate(content.published_at)}</p>
         )}
 
+        {/* Divider */}
+        <div className="border-t border-surface-border mb-7 animate-fade-up-2" />
+
+        {/* Bookmark */}
         {user && (
-          <form action={toggleAction} className="mb-8">
+          <form action={toggleAction} className="mb-8 animate-fade-up-2">
             <button
               type="submit"
-              className={`text-sm px-4 py-1.5 rounded-lg border transition-colors ${
+              className={`inline-flex items-center gap-2 text-sm px-4 py-2 rounded-full border font-medium transition-all duration-200 ${
                 isBookmarked
-                  ? 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
-                  : 'bg-white border-gray-200 text-gray-600 hover:border-blue-300 hover:text-blue-700'
+                  ? 'bg-azure-50 border-azure-200 text-azure-700 hover:bg-azure-100'
+                  : 'bg-white border-surface-border text-gray-500 hover:border-azure-300 hover:text-azure-700'
               }`}
             >
-              {isBookmarked ? '저장됨 ✓' : '저장하기'}
+              <svg viewBox="0 0 24 24" fill={isBookmarked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+              </svg>
+              {isBookmarked ? '저장됨' : '저장하기'}
             </button>
           </form>
         )}
 
+        {/* Content or paywall */}
         {isLocked ? (
-          <div className="border border-gray-200 rounded-2xl p-10 text-center bg-gray-50">
-            <p className="font-semibold text-gray-900 mb-1">프리미엄 전용 콘텐츠입니다</p>
-            <p className="text-sm text-gray-500 mb-5">
-              프리미엄 멤버십을 구독하면 모든 콘텐츠를 이용할 수 있습니다.
-            </p>
-            <div className="flex gap-3 justify-center">
-              {!user && (
-                <Link
-                  href={`/login?next=/briefings/${id}`}
-                  className="text-sm px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:border-blue-300 hover:text-blue-700 transition-colors"
-                >
-                  로그인
+          <div className="rounded-2xl overflow-hidden border border-surface-border animate-fade-up-2">
+            {/* Blurred preview */}
+            <div className="h-24 bg-gradient-to-b from-transparent to-white relative overflow-hidden">
+              <div className="absolute inset-0 p-5 blur-sm opacity-40 pointer-events-none select-none text-sm text-gray-600 leading-relaxed">
+                이 콘텐츠는 프리미엄 멤버에게만 공개됩니다. 지금 구독하시면 대치동 학원 심층 분석과 입시 트렌드 리포트를 포함한 모든 프리미엄 콘텐츠를 이용하실 수 있습니다.
+              </div>
+            </div>
+            {/* Paywall CTA */}
+            <div className="bg-surface-50 px-8 py-8 text-center border-t border-surface-border">
+              <p className="font-semibold text-gray-900 mb-1">프리미엄 전용 콘텐츠입니다</p>
+              <p className="text-sm text-gray-500 mb-6">
+                프리미엄 멤버십을 구독하면 모든 콘텐츠를 이용할 수 있습니다.
+              </p>
+              <div className="flex gap-3 justify-center">
+                {!user && (
+                  <Link
+                    href={`/login?next=/briefings/${id}`}
+                    className="btn-outline text-sm py-2 px-5"
+                  >
+                    로그인
+                  </Link>
+                )}
+                <Link href="/pricing" className="btn-primary text-sm py-2.5 px-6">
+                  프리미엄 시작하기
                 </Link>
-              )}
-              <Link
-                href="/pricing"
-                className="text-sm px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-800 transition-colors"
-              >
-                프리미엄 시작하기
-              </Link>
+              </div>
             </div>
           </div>
         ) : (
-          <div className="border-t border-gray-100 pt-6">
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{content.body}</p>
+          <div className="animate-fade-up-2">
+            <p className="text-gray-700 leading-[1.85] whitespace-pre-wrap text-[15px]">
+              {content.body}
+            </p>
           </div>
         )}
       </article>

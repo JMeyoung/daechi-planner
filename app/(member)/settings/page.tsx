@@ -3,30 +3,10 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import Button from '@/components/ui/button'
-import type { InterestTag, Profile } from '@/types'
-
-type ChildProfile = {
-  id: string
-  name: string
-  grade: 1 | 2 | 3
-  memo: string | null
-  color: string
-  sort_order: number
-}
+import { CHILD_COLORS, BADGE_COLOR, DOT_COLOR } from '@/lib/child-colors'
+import type { InterestTag, Profile, ChildProfile } from '@/types'
 
 const GRADE_LABEL = { 1: '중1', 2: '중2', 3: '중3' }
-const CHILD_COLORS = ['blue', 'violet', 'emerald', 'orange', 'pink']
-const COLOR_CLASS: Record<string, string> = {
-  blue:    'bg-blue-100 text-blue-700 border-blue-200',
-  violet:  'bg-violet-100 text-violet-700 border-violet-200',
-  emerald: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  orange:  'bg-orange-100 text-orange-700 border-orange-200',
-  pink:    'bg-pink-100 text-pink-700 border-pink-200',
-}
-const DOT_COLOR: Record<string, string> = {
-  blue: 'bg-blue-400', violet: 'bg-violet-400', emerald: 'bg-emerald-400',
-  orange: 'bg-orange-400', pink: 'bg-pink-400',
-}
 
 export default function SettingsPage() {
   const supabase = createClient()
@@ -187,7 +167,7 @@ export default function SettingsPage() {
                   <span className={`w-2 h-2 rounded-full shrink-0 ${DOT_COLOR[child.color] ?? 'bg-blue-400'}`} />
                   <div className="flex-1 min-w-0">
                     <span className="text-sm font-medium text-gray-900">{child.name}</span>
-                    <span className={`ml-2 text-xs px-1.5 py-0.5 rounded border font-medium ${COLOR_CLASS[child.color]}`}>
+                    <span className={`ml-2 text-xs px-1.5 py-0.5 rounded border font-medium ${BADGE_COLOR[child.color]}`}>
                       {GRADE_LABEL[child.grade]}
                     </span>
                   </div>

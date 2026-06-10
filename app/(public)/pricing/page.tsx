@@ -18,9 +18,12 @@ const PREMIUM_FEATURES = [
   '신규 콘텐츠 우선 알림',
 ]
 
-function CheckIcon() {
+function CheckIcon({ premium }: { premium?: boolean }) {
   return (
-    <svg className="w-4 h-4 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+    <svg
+      className={`w-4 h-4 shrink-0 ${premium ? 'text-white/80' : 'text-green-500'}`}
+      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+    >
       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
   )
@@ -29,23 +32,26 @@ function CheckIcon() {
 export default function PricingPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-14">
-      <div className="text-center mb-10">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">요금제</h1>
-        <p className="text-gray-500">필요한 만큼 선택하세요. 기본 기능은 무료입니다.</p>
+      <div className="text-center mb-12 animate-fade-up">
+        <p className="section-eyebrow mb-3">요금제</p>
+        <h1 className="font-display text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+          필요한 만큼 선택하세요
+        </h1>
+        <p className="text-gray-500">기본 기능은 무료입니다.</p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-5">
-        {/* Free plan */}
-        <div className="border border-gray-200 rounded-2xl p-6">
-          <div className="mb-5">
-            <p className="text-sm font-medium text-gray-500 mb-1">무료</p>
-            <p className="text-3xl font-bold text-gray-900">
+      <div className="grid md:grid-cols-2 gap-5 items-start">
+        {/* ── Free plan ─────────────────────────── */}
+        <div className="card-lift p-7 animate-fade-up-1">
+          <div className="mb-6">
+            <p className="text-sm font-semibold text-gray-400 mb-2 uppercase tracking-wide">무료</p>
+            <p className="font-display text-4xl font-bold text-gray-900">
               ₩0<span className="text-base font-normal text-gray-400"> /월</span>
             </p>
           </div>
-          <ul className="space-y-2.5 mb-6">
+          <ul className="space-y-3 mb-8">
             {FREE_FEATURES.map(f => (
-              <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
+              <li key={f} className="flex items-center gap-2.5 text-sm text-gray-600">
                 <CheckIcon />
                 {f}
               </li>
@@ -53,51 +59,64 @@ export default function PricingPage() {
           </ul>
           <Link
             href="/login?signup=1"
-            className="block text-center w-full border border-blue-700 text-blue-700 font-medium py-2.5 rounded-lg hover:bg-blue-50 transition-colors text-sm"
+            className="btn-outline w-full justify-center text-sm"
           >
             무료로 시작하기
           </Link>
         </div>
 
-        {/* Premium plan */}
-        <div className="border-2 border-blue-700 rounded-2xl p-6 relative">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-            <span className="bg-blue-700 text-white text-xs font-medium px-3 py-1 rounded-full">
-              추천
+        {/* ── Premium plan ──────────────────────── */}
+        <div className="relative bg-azure-gradient rounded-2xl p-7 text-white shadow-[0_8px_32px_rgba(37,99,235,0.3)] animate-fade-up-2 md:scale-[1.02]">
+          {/* Recommended badge */}
+          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+            <span className="bg-white text-azure-700 text-xs font-bold px-3.5 py-1 rounded-full shadow-sm">
+              ✦ 추천
             </span>
           </div>
-          <div className="mb-5">
-            <p className="text-sm font-medium text-blue-700 mb-1">프리미엄</p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-3xl font-bold text-gray-900">
-                ₩9,900<span className="text-base font-normal text-gray-400"> /월</span>
+
+          {/* Decorative circle */}
+          <div className="absolute -right-6 -top-6 w-28 h-28 rounded-full bg-white/10 pointer-events-none" aria-hidden="true" />
+
+          <div className="mb-6 relative">
+            <p className="text-sm font-semibold text-white/60 mb-2 uppercase tracking-wide">프리미엄</p>
+            <div className="flex items-baseline gap-2.5">
+              <p className="font-display text-4xl font-bold text-white">
+                ₩9,900<span className="text-base font-normal text-white/60"> /월</span>
               </p>
-              <span className="text-xs text-gray-400 line-through">₩11,900</span>
+              <span className="text-xs text-white/50 line-through">₩11,900</span>
             </div>
-            <p className="text-xs text-gray-500 mt-1">연간 구독 시 ₩99,000 (17% 할인)</p>
+            <p className="text-xs text-white/60 mt-1.5">연간 구독 시 ₩99,000 (17% 할인)</p>
           </div>
-          <ul className="space-y-2.5 mb-6">
-            {[...FREE_FEATURES, ...PREMIUM_FEATURES.map(f => `✦ ${f}`)].map(f => (
-              <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
-                <CheckIcon />
-                <span className={f.startsWith('✦') ? 'font-medium text-gray-800' : ''}>
-                  {f.replace('✦ ', '')}
-                </span>
+
+          <ul className="space-y-3 mb-8 relative">
+            {FREE_FEATURES.map(f => (
+              <li key={f} className="flex items-center gap-2.5 text-sm text-white/80">
+                <CheckIcon premium />
+                {f}
+              </li>
+            ))}
+            <li className="h-px bg-white/20 my-2" />
+            {PREMIUM_FEATURES.map(f => (
+              <li key={f} className="flex items-center gap-2.5 text-sm text-white font-medium">
+                <CheckIcon premium />
+                {f}
               </li>
             ))}
           </ul>
-          {/* Stripe integration will activate this button */}
+
           <Link
             href="/login?signup=1&plan=premium"
-            className="block text-center w-full bg-blue-700 text-white font-medium py-2.5 rounded-lg hover:bg-blue-800 transition-colors text-sm"
+            className="block text-center w-full bg-white text-azure-700 font-bold py-3 rounded-full
+                       shadow-cta hover:shadow-cta-hover hover:-translate-y-px
+                       transition-all duration-200 text-sm"
           >
             프리미엄 시작하기
           </Link>
-          <p className="text-xs text-gray-400 text-center mt-2">첫 7일 무료 체험</p>
+          <p className="text-xs text-white/50 text-center mt-3">첫 7일 무료 체험</p>
         </div>
       </div>
 
-      <p className="text-center text-xs text-gray-400 mt-8">
+      <p className="text-center text-xs text-gray-400 mt-10 animate-fade-up-3">
         결제는 Stripe를 통해 안전하게 처리됩니다. 언제든지 해지 가능합니다.
       </p>
     </div>
