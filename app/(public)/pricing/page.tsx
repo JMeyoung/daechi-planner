@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { getUser, createClient } from '@/lib/supabase/server'
+import type { Subscription } from '@/types'
 
 export const metadata: Metadata = { title: '요금제' }
 
@@ -29,7 +31,20 @@ function CheckIcon({ premium }: { premium?: boolean }) {
   )
 }
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const [user, supabase] = await Promise.all([getUser(), createClient()])
+
+  let isPremium = false
+  if (user) {
+    const { data: sub } = await supabase
+      .from('subscriptions')
+      .select('plan, status')
+      .eq('user_id', user.id)
+      .single()
+    const s = sub as Subscription | null
+    isPremium = s?.plan === 'premium' && (s?.status === 'active' || s?.status === 'trialing')
+  }
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-14">
       <div className="text-center mb-12 animate-fade-up">
@@ -104,20 +119,43 @@ export default function PricingPage() {
             ))}
           </ul>
 
-          <Link
-            href="/login?signup=1&plan=premium"
-            className="block text-center w-full bg-white text-azure-700 font-bold py-3 rounded-full
-                       shadow-cta hover:shadow-cta-hover hover:-translate-y-px
-                       transition-all duration-200 text-sm"
-          >
-            프리미엄 시작하기
-          </Link>
-          <p className="text-xs text-white/50 text-center mt-3">첫 7일 무료 체험</p>
+          {isPremium ? (
+            <Link
+              href="/settings"
+              className="block text-center w-full bg-white text-azure-700 font-bold py-3 rounded-full
+                         shadow-cta hover:shadow-cta-hover hover:-translate-y-px
+                         transition-all duration-200 text-sm"
+            >
+              구독 관리하기
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/checkout?plan=premium_monthly"
+                className="block text-center w-full bg-white text-azure-700 font-bold py-3 rounded-full
+                           shadow-cta hover:shadow-cta-hover hover:-translate-y-px
+                           transition-all duration-200 text-sm"
+              >
+                {user ? '프리미엄 시작하기' : '무료 체험 시작'}
+              </Link>
+              <Link
+                href="/checkout?plan=premium_yearly"
+                className="block text-center w-full mt-2.5 bg-white/15 text-white font-semibold py-2.5 rounded-full
+                           hover:bg-white/25 transition-all duration-200 text-sm border border-white/30"
+              >
+                연간 구독 (₩99,000)
+              </Link>
+            </>
+          )}
+
+          <p className="text-xs text-white/50 text-center mt-3">
+            {isPremium ? '언제든지 해지 가능합니다.' : '첫 7일 무료 체험 · 언제든지 해지 가능'}
+          </p>
         </div>
       </div>
 
       <p className="text-center text-xs text-gray-400 mt-10 animate-fade-up-3">
-        결제는 Stripe를 통해 안전하게 처리됩니다. 언제든지 해지 가능합니다.
+        결제는 Stripe를 통해 안전하게 처리됩니다.
       </p>
     </div>
   )

@@ -44,11 +44,13 @@ export type Bookmark = {
 export type Subscription = {
   id: string
   user_id: string
-  stripe_customer_id: string | null
-  stripe_subscription_id: string | null
   plan: SubscriptionPlan
   status: SubscriptionStatus
   current_period_end: string | null
+  toss_billing_key: string | null
+  toss_customer_key: string | null
+  stripe_customer_id: string | null
+  stripe_subscription_id: string | null
   created_at: string
   updated_at: string
 }

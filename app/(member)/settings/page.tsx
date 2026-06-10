@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import Button from '@/components/ui/button'
 import { CHILD_COLORS, BADGE_COLOR, DOT_COLOR } from '@/lib/child-colors'
-import type { InterestTag, Profile, ChildProfile } from '@/types'
+import type { InterestTag, Profile, ChildProfile, Subscription } from '@/types'
 
 const GRADE_LABEL = { 1: '중1', 2: '중2', 3: '중3' }
 
@@ -18,6 +19,9 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
+  // Subscription
+  const [subscription, setSubscription] = useState<Subscription | null>(null)
+
   // Children
   const [children, setChildren] = useState<ChildProfile[]>([])
   const [showAddChild, setShowAddChild] = useState(false)
@@ -30,17 +34,19 @@ export default function SettingsPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
-      const [profileRes, tagsRes, interestsRes, childrenRes] = await Promise.all([
+      const [profileRes, tagsRes, interestsRes, childrenRes, subRes] = await Promise.all([
         supabase.from('profiles').select('*').eq('id', user.id).single(),
         supabase.from('interest_tags').select('*').order('label_ko'),
         supabase.from('user_interests').select('tag_id').eq('user_id', user.id),
         supabase.from('child_profiles').select('*').eq('user_id', user.id).order('sort_order'),
+        supabase.from('subscriptions').select('*').eq('user_id', user.id).single(),
       ])
 
       if (profileRes.data) setProfile(profileRes.data)
       if (tagsRes.data) setTags(tagsRes.data)
       if (interestsRes.data) setSelectedTags(new Set(interestsRes.data.map(r => r.tag_id)))
       if (childrenRes.data) setChildren(childrenRes.data as ChildProfile[])
+      if (subRes.data) setSubscription(subRes.data as Subscription)
     }
     load()
   }, [])
@@ -127,9 +133,63 @@ export default function SettingsPage() {
 
   const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
 
+  const isPremium = subscription?.plan === 'premium' && (subscription?.status === 'active' || subscription?.status === 'trialing')
+  const periodEnd = subscription?.current_period_end
+    ? new Date(subscription.current_period_end).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
+    : null
+
+  async function handleCancelSubscription() {
+    if (!confirm('구독을 취소하시겠습니까? 취소 즉시 프리미엄 기능을 이용할 수 없게 됩니다.')) return
+    const res = await fetch('/api/toss/cancel', { method: 'POST' })
+    if (res.ok) setSubscription(prev => prev ? { ...prev, plan: 'free', status: 'canceled' } : prev)
+  }
+
   return (
     <div className="max-w-lg">
       <h1 className="text-lg font-bold text-gray-900 mb-6">설정</h1>
+
+      {/* 구독 관리 */}
+      <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5">
+        <h2 className="font-semibold text-gray-900 mb-4">구독</h2>
+        {isPremium ? (
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm font-bold text-azure-700">✦ 프리미엄</span>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                  subscription?.status === 'trialing'
+                    ? 'bg-orange-100 text-orange-700'
+                    : 'bg-green-100 text-green-700'
+                }`}>
+                  {subscription?.status === 'trialing' ? '체험 중' : '활성'}
+                </span>
+              </div>
+              {periodEnd && (
+                <p className="text-xs text-gray-400">다음 결제일: {periodEnd}</p>
+              )}
+            </div>
+            <button
+              onClick={handleCancelSubscription}
+              className="text-sm text-red-500 font-medium hover:text-red-600 transition-colors border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-50"
+            >
+              구독 취소
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-700 mb-0.5">무료 플랜</p>
+              <p className="text-xs text-gray-400">프리미엄으로 업그레이드하고 모든 콘텐츠를 열람하세요.</p>
+            </div>
+            <Link
+              href="/pricing"
+              className="text-sm text-white font-semibold bg-azure-600 hover:bg-azure-700 transition-colors px-3 py-1.5 rounded-lg shrink-0 ml-3"
+            >
+              업그레이드
+            </Link>
+          </div>
+        )}
+      </div>
 
       {/* 자녀 관리 */}
       <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5">
