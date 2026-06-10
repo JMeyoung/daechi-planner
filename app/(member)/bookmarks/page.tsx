@@ -27,7 +27,7 @@ export default async function BookmarksPage() {
 
   const items = (data ?? [])
     .map(b => b.content_items)
-    .filter(Boolean) as ContentSummary[]
+    .filter(Boolean) as unknown as ContentSummary[]
 
   return (
     <div>
