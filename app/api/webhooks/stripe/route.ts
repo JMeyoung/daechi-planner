@@ -16,6 +16,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing signature' }, { status: 400 })
   }
 
+  if (!stripe) {
+    return NextResponse.json({ error: 'Stripe not configured' }, { status: 503 })
+  }
+
   let event: Stripe.Event
   try {
     event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!)

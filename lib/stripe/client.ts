@@ -1,10 +1,9 @@
 import Stripe from 'stripe'
 
-// Singleton for server-side use only
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-  typescript: true,
-})
+// Singleton — null when STRIPE_SECRET_KEY is not set (e.g. before Stripe activation)
+export const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2025-02-24.acacia' })
+  : null
 
 export const PLANS = {
   premium_monthly: {
