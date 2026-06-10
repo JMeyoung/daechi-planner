@@ -155,7 +155,7 @@ export default async function PricingPage() {
       </div>
 
       <p className="text-center text-xs text-gray-400 mt-10 animate-fade-up-3">
-        결제는 Stripe를 통해 안전하게 처리됩니다.
+        결제는 토스페이먼츠를 통해 안전하게 처리됩니다.
       </p>
     </div>
   )

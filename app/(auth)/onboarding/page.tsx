@@ -70,6 +70,9 @@ export default async function OnboardingPage() {
               <option value="1">중학교 1학년</option>
               <option value="2">중학교 2학년</option>
               <option value="3">중학교 3학년</option>
+              <option value="4">고등학교 1학년</option>
+              <option value="5">고등학교 2학년</option>
+              <option value="6">고등학교 3학년</option>
             </select>
           </div>
 

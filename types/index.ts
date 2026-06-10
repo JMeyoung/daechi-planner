@@ -8,7 +8,7 @@ export type Profile = {
   email: string
   full_name: string | null
   role: UserRole
-  child_grade: 1 | 2 | 3 | null
+  child_grade: 1 | 2 | 3 | 4 | 5 | 6 | null
   created_at: string
   updated_at: string
 }
@@ -81,7 +81,7 @@ export type ChildProfile = {
   id: string
   user_id: string
   name: string
-  grade: 1 | 2 | 3
+  grade: 1 | 2 | 3 | 4 | 5 | 6
   memo: string | null
   color: string
   sort_order: number

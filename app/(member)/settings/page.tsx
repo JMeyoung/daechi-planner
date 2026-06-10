@@ -7,7 +7,10 @@ import Button from '@/components/ui/button'
 import { CHILD_COLORS, BADGE_COLOR, DOT_COLOR } from '@/lib/child-colors'
 import type { InterestTag, Profile, ChildProfile, Subscription } from '@/types'
 
-const GRADE_LABEL = { 1: '중1', 2: '중2', 3: '중3' }
+const GRADE_LABEL: Record<number, string> = {
+  1: '중1', 2: '중2', 3: '중3',
+  4: '고1', 5: '고2', 6: '고3',
+}
 
 export default function SettingsPage() {
   const supabase = createClient()
@@ -91,7 +94,7 @@ export default function SettingsPage() {
     const { data } = await supabase.from('child_profiles').insert({
       user_id: user.id,
       name: childForm.name.trim(),
-      grade: Number(childForm.grade) as 1 | 2 | 3,
+      grade: Number(childForm.grade) as 1 | 2 | 3 | 4 | 5 | 6,
       color: childForm.color,
       sort_order: children.length,
     }).select().single()
@@ -106,13 +109,13 @@ export default function SettingsPage() {
     setChildSaving(true)
     await supabase.from('child_profiles').update({
       name: childForm.name.trim(),
-      grade: Number(childForm.grade) as 1 | 2 | 3,
+      grade: Number(childForm.grade) as 1 | 2 | 3 | 4 | 5 | 6,
       color: childForm.color,
     }).eq('id', id)
 
     setChildren(prev => prev.map(c =>
       c.id === id
-        ? { ...c, name: childForm.name.trim(), grade: Number(childForm.grade) as 1|2|3, color: childForm.color }
+        ? { ...c, name: childForm.name.trim(), grade: Number(childForm.grade) as 1|2|3|4|5|6, color: childForm.color }
         : c
     ))
     setEditingChild(null)
@@ -272,13 +275,16 @@ export default function SettingsPage() {
             <label className="block text-sm font-medium text-gray-700 mb-1">대표 자녀 학년</label>
             <select
               value={profile.child_grade ?? ''}
-              onChange={e => setProfile(p => ({ ...p, child_grade: (Number(e.target.value) as 1|2|3) || null }))}
+              onChange={e => setProfile(p => ({ ...p, child_grade: (Number(e.target.value) as 1|2|3|4|5|6) || null }))}
               className={inputClass}
             >
               <option value="">선택 안 함</option>
               <option value="1">중학교 1학년</option>
               <option value="2">중학교 2학년</option>
               <option value="3">중학교 3학년</option>
+              <option value="4">고등학교 1학년</option>
+              <option value="5">고등학교 2학년</option>
+              <option value="6">고등학교 3학년</option>
             </select>
           </div>
         </div>
@@ -347,6 +353,9 @@ function ChildForm({
           <option value="1">중학교 1학년</option>
           <option value="2">중학교 2학년</option>
           <option value="3">중학교 3학년</option>
+          <option value="4">고등학교 1학년</option>
+          <option value="5">고등학교 2학년</option>
+          <option value="6">고등학교 3학년</option>
         </select>
         <div className="flex items-center gap-1.5 px-2">
           {CHILD_COLORS.map(c => (
