@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { cache } from 'react'
 
 export async function createClient() {
   const cookieStore = await cookies()
@@ -25,6 +26,13 @@ export async function createClient() {
     }
   )
 }
+
+// Cached per-request — layout + page share one network call
+export const getUser = cache(async () => {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  return user
+})
 
 // Use this for admin/webhook routes that need elevated privileges
 export function createServiceClient() {

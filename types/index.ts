@@ -55,3 +55,21 @@ export type Subscription = {
 
 // Convenience type for content list items (no body for list views)
 export type ContentSummary = Omit<ContentItem, 'body'>
+
+export type ScheduleCategory = 'academy' | 'exam' | 'personal'
+
+export type ScheduleEvent = {
+  id: string
+  user_id: string
+  title: string
+  category: ScheduleCategory
+  subject: string | null
+  location: string | null
+  start_at: string
+  end_at: string | null
+  is_recurring: boolean
+  recur_days: number[] | null
+  memo: string | null
+  created_at: string
+  updated_at: string
+}

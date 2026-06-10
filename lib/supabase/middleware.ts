@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const MEMBER_PREFIXES = ['/dashboard', '/settings', '/bookmarks']
+const MEMBER_PREFIXES = ['/dashboard', '/settings', '/bookmarks', '/schedule']
 const ADMIN_PREFIX = '/admin'
 
 export async function updateSession(request: NextRequest) {
