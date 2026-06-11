@@ -87,3 +87,16 @@ export type ChildProfile = {
   sort_order: number
   created_at: string
 }
+
+export type AcademyFee = {
+  id: string
+  user_id: string
+  child_id: string | null
+  name: string
+  amount: number
+  payment_day: number | null
+  memo: string | null
+  color: string
+  is_active: boolean
+  created_at: string
+}
