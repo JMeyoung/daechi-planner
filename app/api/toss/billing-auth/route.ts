@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { PLANS, issueBillingKey, chargeBilling } from '@/lib/toss/client'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import type { PlanKey } from '@/lib/toss/client'
 
 export const runtime = 'nodejs'
@@ -49,8 +49,9 @@ export async function GET(request: Request) {
   if (plan.interval === 'month') periodEnd.setMonth(periodEnd.getMonth() + 1)
   else periodEnd.setFullYear(periodEnd.getFullYear() + 1)
 
-  // 4. Save to DB (upsert in case handle_new_user trigger didn't fire)
-  const { error: dbError } = await supabase.from('subscriptions').upsert({
+  // 4. Save to DB — use service role to bypass RLS
+  const serviceSupabase = createServiceClient()
+  const { error: dbError } = await serviceSupabase.from('subscriptions').upsert({
     user_id: user.id,
     toss_billing_key:  billingKey,
     toss_customer_key: customerKey,
