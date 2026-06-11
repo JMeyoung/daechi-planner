@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 const ADMIN_NAV = [
   { href: '/admin', label: '대시보드' },
   { href: '/admin/content', label: '콘텐츠 관리' },
+  { href: '/admin/coupons', label: '쿠폰 관리' },
 ]
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
