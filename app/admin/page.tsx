@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import NewsletterForm from './newsletter-form'
 
 export const metadata: Metadata = { title: '관리자 대시보드' }
 
@@ -45,6 +46,9 @@ export default async function AdminDashboardPage() {
         ))}
       </div>
 
+      {/* Newsletter */}
+      <NewsletterForm premiumCount={premiumRes.count ?? 0} />
+
       {/* Quick links */}
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <h2 className="font-semibold text-gray-900 mb-3">빠른 액션</h2>
@@ -60,6 +64,12 @@ export default async function AdminDashboardPage() {
             className="text-sm text-center border border-gray-200 rounded-lg p-3 hover:border-blue-400 hover:bg-blue-50 transition-colors text-gray-600"
           >
             전체 콘텐츠 보기
+          </Link>
+          <Link
+            href="/admin/coupons"
+            className="text-sm text-center border border-gray-200 rounded-lg p-3 hover:border-blue-400 hover:bg-blue-50 transition-colors text-gray-600"
+          >
+            쿠폰 관리
           </Link>
           <Link
             href="/briefings"

@@ -322,7 +322,7 @@ export default function FeesPage() {
                 placeholder="학원명 *" className={inputClass} autoFocus />
               <div className="grid grid-cols-2 gap-2">
                 <input value={form.amount} onChange={e => setForm(f => ({ ...f, amount: e.target.value }))}
-                  placeholder="월 금액 *" type="number" className={inputClass} />
+                  placeholder="월 금액 *" type="number" min={1000} step={5000} className={inputClass} />
                 <input value={form.payment_day} onChange={e => setForm(f => ({ ...f, payment_day: e.target.value }))}
                   placeholder="납부일 (1-31)" type="number" min="1" max="31" className={inputClass} />
               </div>

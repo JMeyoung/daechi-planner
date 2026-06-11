@@ -88,6 +88,20 @@ export type ChildProfile = {
   created_at: string
 }
 
+export type CouponType = 'percent' | 'fixed'
+
+export type Coupon = {
+  id: string
+  code: string
+  type: CouponType
+  value: number
+  max_uses: number | null
+  used_count: number
+  expires_at: string | null
+  is_active: boolean
+  created_at: string
+}
+
 export type AcademyFee = {
   id: string
   user_id: string

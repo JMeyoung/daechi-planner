@@ -25,7 +25,7 @@ export async function chargeBilling(params: {
   billingKey: string
   customerKey: string
   orderId: string
-  amount: number
+  amount: number  // can be discounted amount
   orderName: string
   customerEmail?: string
 }) {
