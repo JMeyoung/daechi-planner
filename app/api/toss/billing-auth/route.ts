@@ -49,14 +49,17 @@ export async function GET(request: Request) {
   if (plan.interval === 'month') periodEnd.setMonth(periodEnd.getMonth() + 1)
   else periodEnd.setFullYear(periodEnd.getFullYear() + 1)
 
-  // 4. Save to DB (row always exists — created by handle_new_user trigger)
-  await supabase.from('subscriptions').update({
+  // 4. Save to DB (upsert in case handle_new_user trigger didn't fire)
+  const { error: dbError } = await supabase.from('subscriptions').upsert({
+    user_id: user.id,
     toss_billing_key:  billingKey,
     toss_customer_key: customerKey,
     plan:   'premium',
     status: 'active',
     current_period_end: periodEnd.toISOString(),
-  }).eq('user_id', user.id)
+  }, { onConflict: 'user_id' })
+
+  if (dbError) console.error('[billing-auth] db upsert error:', dbError)
 
   return NextResponse.redirect(`${origin}/checkout/success`)
 }
