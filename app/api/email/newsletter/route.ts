@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
-import { resend, FROM } from '@/lib/resend'
+import { getResend, FROM } from '@/lib/resend'
 import { newsletterHtml } from '@/lib/email-templates'
 
 export async function POST(request: Request) {
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
   let sent = 0
   for (const chunk of chunks) {
     const batch = chunk.map(to => ({ from: FROM, to, subject, html }))
-    const { data } = await resend.batch.send(batch)
+    const { data } = await getResend().batch.send(batch)
     sent += data?.data?.length ?? 0
   }
 

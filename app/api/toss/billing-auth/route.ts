@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { PLANS, issueBillingKey, chargeBilling } from '@/lib/toss/client'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { resend, FROM } from '@/lib/resend'
+import { getResend, FROM } from '@/lib/resend'
 import { paymentConfirmHtml } from '@/lib/email-templates'
 import type { PlanKey } from '@/lib/toss/client'
 
@@ -103,7 +103,7 @@ export async function GET(request: Request) {
   // 6. 결제 확인 이메일
   if (user.email) {
     const periodEndStr = periodEnd.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM,
       to: user.email,
       subject: '대치 플래너 프리미엄 구독이 시작되었습니다',
