@@ -5,6 +5,18 @@ import type { Subscription } from '@/types'
 
 export const metadata: Metadata = { title: '요금제' }
 
+const CARD_ERROR_MESSAGES: Record<string, string> = {
+  NOT_SUPPORTED_CARD_TYPE: '해당 카드 종류는 정기결제를 지원하지 않습니다. 국내 개인 신용카드를 사용해 주세요.',
+  CARD_PROCESSING_ERROR: '카드 처리 중 오류가 발생했습니다. 다시 시도해 주세요.',
+  EXCEED_MAX_CARD_INSTALLMENT_PLAN: '할부 개월 수가 초과되었습니다.',
+}
+
+function getErrorMessage(code: string | null, message: string | null): string | null {
+  if (!code && !message) return null
+  if (code && CARD_ERROR_MESSAGES[code]) return CARD_ERROR_MESSAGES[code]
+  return message ? decodeURIComponent(message) : '결제 중 오류가 발생했습니다. 다시 시도해 주세요.'
+}
+
 const FREE_FEATURES = [
   '교육 일정 관리',
   '공개 브리프 열람',
@@ -31,8 +43,10 @@ function CheckIcon({ premium }: { premium?: boolean }) {
   )
 }
 
-export default async function PricingPage() {
-  const [user, supabase] = await Promise.all([getUser(), createClient()])
+export default async function PricingPage({ searchParams }: { searchParams: Promise<{ code?: string; message?: string; error?: string }> }) {
+  const [user, supabase, params] = await Promise.all([getUser(), createClient(), searchParams])
+  const errorMessage = getErrorMessage(params.code ?? null, params.message ?? null)
+    ?? (params.error ? '결제 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.' : null)
 
   let isPremium = false
   if (user) {
@@ -47,6 +61,11 @@ export default async function PricingPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-14">
+      {errorMessage && (
+        <div className="mb-6 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700 text-center animate-fade-up">
+          {errorMessage}
+        </div>
+      )}
       <div className="text-center mb-12 animate-fade-up">
         <p className="section-eyebrow mb-3">요금제</p>
         <h1 className="font-display text-2xl md:text-3xl font-bold text-gray-900 mb-3">
