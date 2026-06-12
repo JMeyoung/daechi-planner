@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 const NAV_LINKS = [
   { href: '/intro', label: '서비스 소개' },
   { href: '/briefings', label: '브리프 둘러보기' },
-  { href: '/pricing', label: '요금제' },
+  // { href: '/pricing', label: '요금제' }, // 베타 기간 동안 숨김
 ]
 
 export default function Header({ userEmail }: { userEmail?: string | null }) {

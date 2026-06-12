@@ -148,13 +148,13 @@ export default async function HomePage() {
       <section className="bg-gradient-to-r from-azure-50 to-surface-50 border-t border-surface-border">
         <div className="max-w-2xl mx-auto px-4 py-14 text-center">
           <h2 className="font-display text-xl font-bold text-gray-900 mb-2">
-            지금 무료로 가입하고 시작하세요
+            지금 바로 대치 플래너를 시작하세요
           </h2>
           <p className="text-gray-500 text-sm mb-7">
-            기본 기능은 무료입니다. 스탠다드 브리프는 구독 후 이용 가능합니다.
+            오픈 베타 기간 동안 모든 기능을 무료로 이용할 수 있습니다.
           </p>
           <Link href="/login?signup=1" className="btn-primary text-sm">
-            무료 회원가입
+            대치 플래너 시작하기
           </Link>
         </div>
       </section>

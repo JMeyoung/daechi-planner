@@ -33,7 +33,8 @@ function LockIcon() {
 }
 
 export default function ContentCard({ item, showLock = true }: ContentCardProps) {
-  const isLocked = showLock && item.is_premium
+  // 오픈 베타 기간 동안 자물쇠 해제 (임시)
+  const isLocked = false // showLock && item.is_premium
 
   return (
     <Link

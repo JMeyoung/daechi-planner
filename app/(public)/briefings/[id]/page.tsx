@@ -57,7 +57,8 @@ export default async function BriefingDetailPage({ params }: Props) {
     isBookmarked = !!bookmarkRes.data
   }
 
-  const isLocked = content.is_premium && !isPremium
+  // 오픈 베타 기간 동안 스탠다드 잠금 해제 (임시)
+  const isLocked = false // content.is_premium && !isPremium
   const toggleAction = toggleBookmark.bind(null, id, isBookmarked)
 
   return (
@@ -95,6 +96,13 @@ export default async function BriefingDetailPage({ params }: Props) {
         {/* Date */}
         {content.published_at && (
           <p className="text-sm text-gray-400 mb-7 animate-fade-up-1">{formatDate(content.published_at)}</p>
+        )}
+
+        {/* 오픈 베타 무료 제공 알림 (임시) */}
+        {content.is_premium && (
+          <div className="bg-azure-50 text-azure-700 text-sm px-4 py-3 rounded-xl mb-6 animate-fade-up-2 font-medium">
+            ✨ 오픈 베타 기념으로 스탠다드 콘텐츠를 무료로 제공하고 있습니다.
+          </div>
         )}
 
         {/* Divider */}

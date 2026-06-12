@@ -102,6 +102,7 @@ export default async function DashboardPage() {
         <h1 className="font-display text-xl font-bold text-white">
           {profile?.full_name ?? user.email?.split('@')[0]} 님
         </h1>
+        {/* 베타 기간 동안 플랜 표시 및 업그레이드 숨김
         <div className="flex items-center gap-2 mt-3">
           <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
             isPremium
@@ -116,6 +117,7 @@ export default async function DashboardPage() {
             </Link>
           )}
         </div>
+        */}
       </div>
 
       {/* ── Quick Stats ────────────────────────────── */}
