@@ -44,7 +44,7 @@ export default function ContentCard({ item, showLock = true }: ContentCardProps)
         <div className="flex items-center gap-1.5 flex-wrap">
           <Badge category={item.category} />
           {item.is_premium && (
-            <Badge variant="orange">프리미엄</Badge>
+            <Badge variant="orange">스탠다드</Badge>
           )}
         </div>
         {isLocked && <LockIcon />}
@@ -56,7 +56,7 @@ export default function ContentCard({ item, showLock = true }: ContentCardProps)
 
       {item.summary && (
         <p className={`text-sm text-gray-500 leading-relaxed line-clamp-2 mb-3 ${isLocked ? 'opacity-40' : ''}`}>
-          {isLocked ? '프리미엄 회원에게만 공개됩니다.' : item.summary}
+          {isLocked ? '스탠다드 회원에게만 공개됩니다.' : item.summary}
         </p>
       )}
 

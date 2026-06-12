@@ -108,7 +108,7 @@ export default async function DashboardPage() {
               ? 'bg-white/25 text-white border border-white/30'
               : 'bg-white/20 text-white/90 border border-white/20'
           }`}>
-            {isPremium ? '✦ 프리미엄' : '무료 플랜'}
+            {isPremium ? '✦ 스탠다드' : '무료 플랜'}
           </span>
           {!isPremium && (
             <Link href="/pricing" className="text-xs text-white/70 hover:text-white underline underline-offset-2 transition-colors">

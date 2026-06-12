@@ -1,7 +1,7 @@
 export type UserRole = 'member' | 'admin'
 export type ContentCategory = 'briefing' | 'tip' | 'announcement' | 'event'
 export type SubscriptionPlan = 'free' | 'premium'
-export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing'
+export type SubscriptionStatus = 'active' | 'canceled' | 'past_due'
 
 export type Profile = {
   id: string
@@ -49,8 +49,6 @@ export type Subscription = {
   current_period_end: string | null
   toss_billing_key: string | null
   toss_customer_key: string | null
-  stripe_customer_id: string | null
-  stripe_subscription_id: string | null
   created_at: string
   updated_at: string
 }

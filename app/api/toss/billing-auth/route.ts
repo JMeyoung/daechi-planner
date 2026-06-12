@@ -106,7 +106,7 @@ export async function GET(request: Request) {
     await getResend().emails.send({
       from: FROM,
       to: user.email,
-      subject: '대치 플래너 프리미엄 구독이 시작되었습니다',
+      subject: '대치 플래너 스탠다드 구독이 시작되었습니다',
       html: paymentConfirmHtml({ planLabel: plan.label, amount: chargeAmount, periodEnd: periodEndStr }),
     }).catch(e => console.error('[billing-auth] email error:', e))
   }

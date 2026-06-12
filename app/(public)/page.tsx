@@ -151,7 +151,7 @@ export default async function HomePage() {
             지금 무료로 가입하고 시작하세요
           </h2>
           <p className="text-gray-500 text-sm mb-7">
-            기본 기능은 무료입니다. 프리미엄 브리프는 구독 후 이용 가능합니다.
+            기본 기능은 무료입니다. 스탠다드 브리프는 구독 후 이용 가능합니다.
           </p>
           <Link href="/login?signup=1" className="btn-primary text-sm">
             무료 회원가입

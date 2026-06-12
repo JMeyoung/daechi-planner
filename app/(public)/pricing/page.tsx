@@ -26,7 +26,7 @@ const FREE_FEATURES = [
 
 const PREMIUM_FEATURES = [
   '무제한 북마크',
-  '프리미엄 브리프 전체 열람',
+  '스탠다드 브리프 전체 열람',
   '대치동 학원 심층 분석 리포트',
   '주간 뉴스레터 이메일 수신',
   '신규 콘텐츠 우선 알림',
@@ -56,7 +56,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
       .eq('user_id', user.id)
       .single()
     const s = sub as Subscription | null
-    isPremium = s?.plan === 'premium' && (s?.status === 'active' || s?.status === 'trialing')
+    isPremium = s?.plan === 'premium' && s?.status === 'active'
   }
 
   return (
@@ -112,7 +112,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
           <div className="absolute -right-6 -top-6 w-28 h-28 rounded-full bg-white/10 pointer-events-none" aria-hidden="true" />
 
           <div className="mb-6 relative">
-            <p className="text-sm font-semibold text-white/60 mb-2 uppercase tracking-wide">프리미엄</p>
+            <p className="text-sm font-semibold text-white/60 mb-2 uppercase tracking-wide">스탠다드</p>
             <div className="flex items-baseline gap-2.5">
               <p className="font-display text-4xl font-bold text-white">
                 ₩9,900<span className="text-base font-normal text-white/60"> /월</span>
@@ -155,7 +155,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
                            shadow-cta hover:shadow-cta-hover hover:-translate-y-px
                            transition-all duration-200 text-sm"
               >
-                {user ? '프리미엄 시작하기' : '무료 체험 시작'}
+                스탠다드 시작하기
               </Link>
               <Link
                 href="/checkout?plan=premium_yearly"
@@ -168,7 +168,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
           )}
 
           <p className="text-xs text-white/50 text-center mt-3">
-            {isPremium ? '언제든지 해지 가능합니다.' : '첫 7일 무료 체험 · 언제든지 해지 가능'}
+            언제든지 해지 가능합니다.
           </p>
         </div>
       </div>

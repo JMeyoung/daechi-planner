@@ -10,7 +10,7 @@ export default function NewsletterForm({ premiumCount }: { premiumCount: number 
 
   async function handleSend() {
     if (!subject.trim() || !body.trim()) return
-    if (!confirm(`프리미엄 구독자 ${premiumCount}명에게 뉴스레터를 발송할까요?`)) return
+    if (!confirm(`스탠다드 구독자 ${premiumCount}명에게 뉴스레터를 발송할까요?`)) return
     setStatus('sending')
     try {
       const res = await fetch('/api/email/newsletter', {
@@ -33,7 +33,7 @@ export default function NewsletterForm({ premiumCount }: { premiumCount: number 
     <div className="bg-white rounded-xl border border-gray-200 p-5">
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-semibold text-gray-900">뉴스레터 발송</h2>
-        <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">프리미엄 {premiumCount}명</span>
+        <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">스탠다드 {premiumCount}명</span>
       </div>
 
       {status === 'done' && (

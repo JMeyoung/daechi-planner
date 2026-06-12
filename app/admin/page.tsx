@@ -21,7 +21,7 @@ export default async function AdminDashboardPage() {
   const stats = [
     { label: '총 콘텐츠', value: contentRes.count ?? 0 },
     { label: '가입 회원', value: memberRes.count ?? 0 },
-    { label: '프리미엄 구독', value: premiumRes.count ?? 0 },
+    { label: '스탠다드 구독', value: premiumRes.count ?? 0 },
   ]
 
   return (

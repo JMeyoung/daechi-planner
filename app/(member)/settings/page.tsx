@@ -136,13 +136,13 @@ export default function SettingsPage() {
 
   const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
 
-  const isPremium = subscription?.plan === 'premium' && (subscription?.status === 'active' || subscription?.status === 'trialing')
+  const isPremium = subscription?.plan === 'premium' && subscription?.status === 'active'
   const periodEnd = subscription?.current_period_end
     ? new Date(subscription.current_period_end).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
     : null
 
   async function handleCancelSubscription() {
-    if (!confirm('구독을 취소하시겠습니까? 취소 즉시 프리미엄 기능을 이용할 수 없게 됩니다.')) return
+    if (!confirm('구독을 취소하시겠습니까? 취소 즉시 스탠다드 기능을 이용할 수 없게 됩니다.')) return
     const res = await fetch('/api/toss/cancel', { method: 'POST' })
     if (res.ok) setSubscription(prev => prev ? { ...prev, plan: 'free', status: 'canceled' } : prev)
   }
@@ -158,13 +158,9 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-bold text-azure-700">✦ 프리미엄</span>
-                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                  subscription?.status === 'trialing'
-                    ? 'bg-orange-100 text-orange-700'
-                    : 'bg-green-100 text-green-700'
-                }`}>
-                  {subscription?.status === 'trialing' ? '체험 중' : '활성'}
+                <span className="text-sm font-bold text-azure-700">✦ 스탠다드</span>
+                <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-green-100 text-green-700">
+                  활성
                 </span>
               </div>
               {periodEnd && (
@@ -182,7 +178,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-700 mb-0.5">무료 플랜</p>
-              <p className="text-xs text-gray-400">프리미엄으로 업그레이드하고 모든 콘텐츠를 열람하세요.</p>
+              <p className="text-xs text-gray-400">스탠다드로 업그레이드하고 모든 콘텐츠를 열람하세요.</p>
             </div>
             <Link
               href="/pricing"

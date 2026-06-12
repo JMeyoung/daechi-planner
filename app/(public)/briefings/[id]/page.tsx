@@ -77,7 +77,7 @@ export default async function BriefingDetailPage({ params }: Props) {
         {/* Meta */}
         <div className="flex items-center gap-2 mb-4 animate-fade-up">
           <Badge category={content.category} />
-          {content.is_premium && <Badge variant="orange">프리미엄</Badge>}
+          {content.is_premium && <Badge variant="orange">스탠다드</Badge>}
         </div>
 
         {/* Title */}
@@ -125,14 +125,14 @@ export default async function BriefingDetailPage({ params }: Props) {
             {/* Blurred preview */}
             <div className="h-24 bg-gradient-to-b from-transparent to-white relative overflow-hidden">
               <div className="absolute inset-0 p-5 blur-sm opacity-40 pointer-events-none select-none text-sm text-gray-600 leading-relaxed">
-                이 콘텐츠는 프리미엄 멤버에게만 공개됩니다. 지금 구독하시면 대치동 학원 심층 분석과 입시 트렌드 리포트를 포함한 모든 프리미엄 콘텐츠를 이용하실 수 있습니다.
+                이 콘텐츠는 스탠다드 멤버에게만 공개됩니다. 지금 구독하시면 대치동 학원 심층 분석과 입시 트렌드 리포트를 포함한 모든 스탠다드 콘텐츠를 이용하실 수 있습니다.
               </div>
             </div>
             {/* Paywall CTA */}
             <div className="bg-surface-50 px-8 py-8 text-center border-t border-surface-border">
-              <p className="font-semibold text-gray-900 mb-1">프리미엄 전용 콘텐츠입니다</p>
+              <p className="font-semibold text-gray-900 mb-1">스탠다드 전용 콘텐츠입니다</p>
               <p className="text-sm text-gray-500 mb-6">
-                프리미엄 멤버십을 구독하면 모든 콘텐츠를 이용할 수 있습니다.
+                스탠다드 멤버십을 구독하면 모든 콘텐츠를 이용할 수 있습니다.
               </p>
               <div className="flex gap-3 justify-center">
                 {!user && (
@@ -144,7 +144,7 @@ export default async function BriefingDetailPage({ params }: Props) {
                   </Link>
                 )}
                 <Link href="/pricing" className="btn-primary text-sm py-2.5 px-6">
-                  프리미엄 시작하기
+                  스탠다드 시작하기
                 </Link>
               </div>
             </div>

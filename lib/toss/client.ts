@@ -5,8 +5,8 @@ function authHeader() {
 }
 
 export const PLANS = {
-  premium_monthly: { label: '대치 플래너 프리미엄 월간', amount: 9900, interval: 'month' as const },
-  premium_yearly:  { label: '대치 플래너 프리미엄 연간', amount: 99000, interval: 'year' as const },
+  premium_monthly: { label: '대치 플래너 스탠다드 월간', amount: 9900, interval: 'month' as const },
+  premium_yearly:  { label: '대치 플래너 스탠다드 연간', amount: 99000, interval: 'year' as const },
 } as const
 
 export type PlanKey = keyof typeof PLANS
