@@ -72,6 +72,12 @@ export default async function AdminDashboardPage() {
             쿠폰 관리
           </Link>
           <Link
+            href="/admin/feedback"
+            className="text-sm text-center border border-gray-200 rounded-lg p-3 hover:border-blue-400 hover:bg-blue-50 transition-colors text-gray-600"
+          >
+            의견 · 대기자
+          </Link>
+          <Link
             href="/briefings"
             className="text-sm text-center border border-gray-200 rounded-lg p-3 hover:border-blue-400 hover:bg-blue-50 transition-colors text-gray-600"
           >

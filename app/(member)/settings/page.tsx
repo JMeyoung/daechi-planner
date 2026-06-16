@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import Button from '@/components/ui/button'
 import { CHILD_COLORS, BADGE_COLOR, DOT_COLOR } from '@/lib/child-colors'
+import FeedbackForm from './feedback-form'
 import type { InterestTag, Profile, ChildProfile, Subscription } from '@/types'
 
 const GRADE_LABEL: Record<number, string> = {
@@ -311,6 +312,11 @@ export default function SettingsPage() {
           {saved ? '저장 완료!' : '저장하기'}
         </Button>
       </form>
+
+      {/* 의견 보내기 */}
+      <div className="mt-5">
+        <FeedbackForm />
+      </div>
     </div>
   )
 }

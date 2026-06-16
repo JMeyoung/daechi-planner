@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import ContentCard from '@/components/content/content-card'
+import WaitlistForm from '@/components/waitlist-form'
 import type { ContentSummary } from '@/types'
 
 function CalendarIcon() {
@@ -156,6 +157,14 @@ export default async function HomePage() {
           <Link href="/login?signup=1" className="btn-primary text-sm">
             대치 플래너 시작하기
           </Link>
+
+          <div className="mt-10 pt-8 border-t border-surface-border/70">
+            <p className="text-sm text-gray-600 mb-1 font-medium">아직 가입은 망설여지시나요?</p>
+            <p className="text-xs text-gray-400 mb-4">
+              이메일만 남겨주시면 새 소식과 업데이트를 가장 먼저 알려드릴게요.
+            </p>
+            <WaitlistForm source="landing" />
+          </div>
         </div>
       </section>
     </>
