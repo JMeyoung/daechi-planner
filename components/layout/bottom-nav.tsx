@@ -76,7 +76,7 @@ export default function BottomNav({ loggedIn }: Props) {
               key={tab.href}
               href={tab.href}
               className={`flex-1 flex flex-col items-center justify-center pt-2.5 pb-3 gap-0.5 text-xs font-medium transition-all duration-150 ${
-                isActive ? 'text-azure-600' : 'text-gray-400 hover:text-gray-600'
+                isActive ? 'text-gold-600' : 'text-gray-400 hover:text-gray-600'
               }`}
             >
               <span className={`transition-transform duration-150 ${isActive ? 'scale-110' : ''}`}>
@@ -84,7 +84,7 @@ export default function BottomNav({ loggedIn }: Props) {
               </span>
               <span>{tab.label}</span>
               {/* Active dot indicator */}
-              <span className={`w-1 h-1 rounded-full transition-all duration-200 ${isActive ? 'bg-azure-500' : 'bg-transparent'}`} />
+              <span className={`w-1 h-1 rounded-full transition-all duration-200 ${isActive ? 'bg-gold-500' : 'bg-transparent'}`} />
             </Link>
           )
         })}

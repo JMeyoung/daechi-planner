@@ -45,13 +45,13 @@ export default function ContentCard({ item, showLock = true }: ContentCardProps)
         <div className="flex items-center gap-1.5 flex-wrap">
           <Badge category={item.category} />
           {item.is_premium && (
-            <Badge variant="orange">스탠다드</Badge>
+            <Badge variant="gold">스탠다드</Badge>
           )}
         </div>
         {isLocked && <LockIcon />}
       </div>
 
-      <h3 className={`font-semibold text-[15px] leading-[1.4] text-gray-900 group-hover:text-azure-700 transition-colors mb-1.5 ${isLocked ? 'opacity-50' : ''}`}>
+      <h3 className={`font-semibold text-[15px] leading-[1.4] text-gray-900 group-hover:text-navy-800 transition-colors mb-1.5 ${isLocked ? 'opacity-50' : ''}`}>
         {item.title}
       </h3>
 

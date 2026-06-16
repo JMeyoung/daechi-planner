@@ -25,6 +25,7 @@ export default function IntroPage() {
       <h1 className="font-display text-2xl md:text-3xl font-bold text-gray-900 mb-5 animate-fade-up">
         대치 플래너란?
       </h1>
+      <div className="gold-line mb-8 animate-fade-up" />
       <p className="text-gray-500 leading-relaxed mb-12 text-[15px] animate-fade-up-1">
         대치동 중학생 학부모들은 매일 쏟아지는 교육 정보 속에서 무엇이 중요한지 판단하기 어렵습니다.
         대치 플래너는 검증된 대치동 교육 정보를 큐레이션하고, 자녀의 학습 일정을 체계적으로 관리할 수 있게 돕습니다.
@@ -37,10 +38,10 @@ export default function IntroPage() {
             className="group flex gap-5 animate-fade-up"
             style={{ animationDelay: `${i * 80}ms` }}
           >
-            {/* Animated left bar */}
-            <div className="w-0.5 rounded-full bg-azure-200 group-hover:bg-azure-500 shrink-0 mt-1 transition-colors duration-300" />
+            {/* Gold accent bar */}
+            <div className="w-0.5 rounded-full bg-gold-200 group-hover:bg-gold-500 shrink-0 mt-1 transition-colors duration-300" />
             <div>
-              <h3 className="font-semibold text-gray-900 mb-1.5 group-hover:text-azure-700 transition-colors duration-200">
+              <h3 className="font-semibold text-gray-900 mb-1.5 group-hover:text-navy-800 transition-colors duration-200">
                 {item.title}
               </h3>
               <p className="text-sm text-gray-500 leading-relaxed">{item.body}</p>
@@ -51,7 +52,7 @@ export default function IntroPage() {
 
       <div className="animate-fade-up-3">
         <Link href="/login?signup=1" className="btn-primary text-sm">
-          무료로 시작하기
+          대치 플래너 시작하기
         </Link>
       </div>
     </div>

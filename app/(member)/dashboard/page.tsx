@@ -31,13 +31,13 @@ function fmtTime(s: string) {
 }
 
 const CATEGORY_COLOR: Record<string, string> = {
-  academy:  'bg-azure-500',
+  academy:  'bg-navy-600',
   exam:     'bg-red-400',
   personal: 'bg-gray-300',
 }
 
 const CATEGORY_BADGE: Record<string, string> = {
-  academy:  'bg-azure-50 text-azure-700',
+  academy:  'bg-navy-50 text-navy-700',
   exam:     'bg-red-50 text-red-600',
   personal: 'bg-gray-100 text-gray-500',
 }
@@ -93,12 +93,14 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* ── Welcome Card ───────────────────────────── */}
-      <div className="relative overflow-hidden bg-azure-gradient rounded-2xl p-5 text-white animate-fade-up">
-        {/* Decorative circle */}
-        <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-white/10 pointer-events-none" aria-hidden="true" />
+      <div className="relative overflow-hidden bg-navy-gradient rounded-2xl p-5 text-white animate-fade-up">
+        {/* Decorative circles */}
+        <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-gold-400/8 pointer-events-none" aria-hidden="true" />
         <div className="absolute -right-2 -bottom-10 w-24 h-24 rounded-full bg-white/5 pointer-events-none" aria-hidden="true" />
+        {/* Gold accent line */}
+        <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold-400/20 to-transparent" aria-hidden="true" />
 
-        <p className="text-white/70 text-sm mb-0.5">안녕하세요</p>
+        <p className="text-white/50 text-sm mb-0.5">안녕하세요</p>
         <h1 className="font-display text-xl font-bold text-white">
           {profile?.full_name ?? user.email?.split('@')[0]} 님
         </h1>
@@ -106,13 +108,13 @@ export default async function DashboardPage() {
         <div className="flex items-center gap-2 mt-3">
           <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
             isPremium
-              ? 'bg-white/25 text-white border border-white/30'
-              : 'bg-white/20 text-white/90 border border-white/20'
+              ? 'bg-gold-400/20 text-gold-300 border border-gold-400/30'
+              : 'bg-white/10 text-white/70 border border-white/15'
           }`}>
             {isPremium ? '✦ 스탠다드' : '무료 플랜'}
           </span>
           {!isPremium && (
-            <Link href="/pricing" className="text-xs text-white/70 hover:text-white underline underline-offset-2 transition-colors">
+            <Link href="/pricing" className="text-xs text-gold-400/70 hover:text-gold-300 underline underline-offset-2 transition-colors">
               업그레이드 →
             </Link>
           )}
@@ -123,14 +125,14 @@ export default async function DashboardPage() {
       {/* ── Quick Stats ────────────────────────────── */}
       <div className="grid grid-cols-2 gap-3 animate-fade-up-1">
         <div className="card-lift p-4 text-center">
-          <p className="font-display text-3xl font-bold text-azure-600">{bookmarkCount}</p>
+          <p className="font-display text-3xl font-bold text-navy-800">{bookmarkCount}</p>
           <p className="text-xs text-gray-400 mt-1 font-medium">저장한 북마크</p>
         </div>
         <Link
           href="/schedule"
           className="card-lift p-4 text-center"
         >
-          <p className="font-display text-3xl font-bold text-azure-600">{todayEvents.length}</p>
+          <p className="font-display text-3xl font-bold text-navy-800">{todayEvents.length}</p>
           <p className="text-xs text-gray-400 mt-1 font-medium">오늘 일정</p>
         </Link>
       </div>
@@ -139,7 +141,7 @@ export default async function DashboardPage() {
       <div className="animate-fade-up-2">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-gray-900">오늘의 일정</h2>
-          <Link href="/schedule" className="text-sm text-azure-600 font-medium hover:text-azure-700 transition-colors">
+          <Link href="/schedule" className="text-sm text-gold-600 font-medium hover:text-gold-700 transition-colors">
             전체 보기
           </Link>
         </div>
@@ -147,7 +149,7 @@ export default async function DashboardPage() {
         {todayEvents.length === 0 ? (
           <div className="bg-surface-50 border border-surface-border rounded-2xl p-6 text-center">
             <p className="text-gray-400 text-sm mb-2">오늘 등록된 일정이 없어요.</p>
-            <Link href="/schedule/new" className="text-sm text-azure-600 font-medium hover:underline">
+            <Link href="/schedule/new" className="text-sm text-gold-600 font-medium hover:underline">
               일정 추가하기 →
             </Link>
           </div>
@@ -160,7 +162,7 @@ export default async function DashboardPage() {
                   key={event.id}
                   href={`/schedule/${event.id}`}
                   className="flex items-center gap-3 bg-white border border-surface-border rounded-xl px-4 py-3
-                             hover:bg-surface-50 hover:border-azure-200 transition-all duration-150"
+                             hover:bg-surface-50 hover:border-gold-200 transition-all duration-150"
                   style={{ animationDelay: `${i * 50}ms` }}
                 >
                   {/* Category color bar */}
@@ -173,7 +175,7 @@ export default async function DashboardPage() {
                       </span>
                       {child && (
                         <span className="flex items-center gap-1 text-xs text-gray-500">
-                          <span className={`w-2 h-2 rounded-full ${DOT_COLOR[child.color] ?? 'bg-azure-400'}`} />
+                          <span className={`w-2 h-2 rounded-full ${DOT_COLOR[child.color] ?? 'bg-navy-400'}`} />
                           {child.name}
                         </span>
                       )}
@@ -196,7 +198,7 @@ export default async function DashboardPage() {
       <div className="animate-fade-up-3">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-gray-900">최신 브리프</h2>
-          <Link href="/briefings" className="text-sm text-azure-600 font-medium hover:text-azure-700 transition-colors">
+          <Link href="/briefings" className="text-sm text-gold-600 font-medium hover:text-gold-700 transition-colors">
             전체 보기
           </Link>
         </div>
