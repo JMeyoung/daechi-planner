@@ -12,8 +12,11 @@ import {
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
 
 const COLOR_MAP: Record<string, string> = {
-  blue: '#3b82f6', green: '#22c55e', red: '#ef4444',
-  yellow: '#eab308', purple: '#a855f7', pink: '#ec4899',
+  blue: '#2d4470',   // navy-600
+  orange: '#d4a853', // gold-400
+  emerald: '#047857',// emerald-700
+  pink: '#9f1239',   // rose-800
+  violet: '#78716c', // stone-500
 }
 
 function formatAmount(n: number) {
