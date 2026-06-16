@@ -135,7 +135,7 @@ export default function SettingsPage() {
     setShowAddChild(false)
   }
 
-  const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+  const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400'
 
   const isPremium = subscription?.plan === 'premium' && subscription?.status === 'active'
   const periodEnd = subscription?.current_period_end
@@ -159,7 +159,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-bold text-azure-700">✦ 스탠다드</span>
+                <span className="text-sm font-bold text-gold-700">✦ 스탠다드</span>
                 <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-green-100 text-green-700">
                   활성
                 </span>
@@ -183,7 +183,7 @@ export default function SettingsPage() {
             </div>
             <Link
               href="/pricing"
-              className="text-sm text-white font-semibold bg-azure-600 hover:bg-azure-700 transition-colors px-3 py-1.5 rounded-lg shrink-0 ml-3"
+              className="text-sm font-semibold bg-gold-500 text-navy-900 hover:bg-gold-400 transition-colors px-3 py-1.5 rounded-lg shrink-0 ml-3"
             >
               업그레이드
             </Link>
@@ -199,7 +199,7 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => { setShowAddChild(true); setEditingChild(null); setChildForm({ name: '', grade: '1', color: 'blue' }) }}
-              className="text-sm text-blue-700 hover:underline font-medium"
+              className="text-sm text-gold-600 hover:underline font-medium"
             >
               + 추가
             </button>
@@ -224,7 +224,7 @@ export default function SettingsPage() {
                 />
               ) : (
                 <div className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors">
-                  <span className={`w-2 h-2 rounded-full shrink-0 ${DOT_COLOR[child.color] ?? 'bg-blue-400'}`} />
+                  <span className={`w-2 h-2 rounded-full shrink-0 ${DOT_COLOR[child.color] ?? 'bg-navy-400'}`} />
                   <div className="flex-1 min-w-0">
                     <span className="text-sm font-medium text-gray-900">{child.name}</span>
                     <span className={`ml-2 text-xs px-1.5 py-0.5 rounded border font-medium ${BADGE_COLOR[child.color]}`}>
@@ -298,8 +298,8 @@ export default function SettingsPage() {
                 onClick={() => toggleTag(tag.id)}
                 className={`px-3 py-1.5 rounded-full text-sm transition-colors border ${
                   selectedTags.has(tag.id)
-                    ? 'bg-blue-700 text-white border-blue-700'
-                    : 'bg-white text-gray-600 border-gray-300 hover:border-blue-400'
+                    ? 'bg-navy-800 text-white border-navy-800'
+                    : 'bg-white text-gray-600 border-gray-300 hover:border-navy-400'
                 }`}
               >
                 {tag.label_ko}
@@ -382,7 +382,7 @@ function ChildForm({
           type="button"
           onClick={onSave}
           disabled={saving || !form.name.trim()}
-          className="flex-1 py-2 rounded-lg bg-blue-700 text-white text-sm font-medium hover:bg-blue-800 transition-colors disabled:opacity-50"
+          className="flex-1 py-2 rounded-lg bg-navy-800 text-white text-sm font-medium hover:bg-navy-900 transition-colors disabled:opacity-50"
         >
           {saving ? '저장 중...' : '저장'}
         </button>

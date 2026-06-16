@@ -125,7 +125,7 @@ export default function EditSchedulePage() {
     router.push('/schedule')
   }
 
-  const input = 'w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+  const input = 'w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400'
 
   if (loading) {
     return <div className="py-20 text-center text-sm text-gray-400">불러오는 중...</div>
@@ -178,7 +178,7 @@ export default function EditSchedulePage() {
                       : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'
                   }`}
                 >
-                  <span className={`w-2 h-2 rounded-full ${DOT_COLOR[child.color] ?? 'bg-blue-400'}`} />
+                  <span className={`w-2 h-2 rounded-full ${DOT_COLOR[child.color] ?? 'bg-navy-400'}`} />
                   {child.name}
                 </button>
               ))}
@@ -196,8 +196,8 @@ export default function EditSchedulePage() {
                 onClick={() => set('category', cat.value)}
                 className={`flex-1 py-2 rounded-lg text-sm font-medium border transition-colors ${
                   form.category === cat.value
-                    ? 'bg-blue-700 text-white border-blue-700'
-                    : 'bg-white text-gray-600 border-gray-300 hover:border-blue-300'
+                    ? 'bg-navy-800 text-white border-navy-900'
+                    : 'bg-white text-gray-600 border-gray-300 hover:border-navy-300'
                 }`}
               >
                 {cat.label}
@@ -220,7 +220,7 @@ export default function EditSchedulePage() {
           <label className="flex items-center gap-2.5 cursor-pointer">
             <div
               onClick={() => setIsRecurring(p => !p)}
-              className={`relative w-10 h-6 rounded-full transition-colors ${isRecurring ? 'bg-blue-700' : 'bg-gray-300'}`}
+              className={`relative w-10 h-6 rounded-full transition-colors ${isRecurring ? 'bg-navy-800' : 'bg-gray-300'}`}
             >
               <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${isRecurring ? 'translate-x-5' : 'translate-x-1'}`} />
             </div>
@@ -239,8 +239,8 @@ export default function EditSchedulePage() {
                   onClick={() => toggleDay(i)}
                   className={`w-9 h-9 rounded-full text-sm font-medium border transition-colors ${
                     recurDays.includes(i)
-                      ? 'bg-blue-700 text-white border-blue-700'
-                      : 'bg-white text-gray-600 border-gray-300 hover:border-blue-300'
+                      ? 'bg-navy-800 text-white border-navy-900'
+                      : 'bg-white text-gray-600 border-gray-300 hover:border-navy-300'
                   }`}
                 >
                   {day}
@@ -293,7 +293,7 @@ export default function EditSchedulePage() {
           type="button"
           onClick={handleSave}
           disabled={saving}
-          className="flex-1 py-3 rounded-xl bg-blue-700 text-white text-sm font-semibold hover:bg-blue-800 transition-colors disabled:opacity-50"
+          className="flex-1 py-3 rounded-xl bg-navy-800 text-white text-sm font-semibold hover:bg-navy-900 transition-colors disabled:opacity-50"
         >
           {saving ? '저장 중...' : '저장하기'}
         </button>

@@ -67,7 +67,7 @@ export default function BottomNav({ loggedIn }: Props) {
   if (!loggedIn) return null
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-t border-surface-border safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-t border-gray-200 safe-area-bottom">
       <div className="flex">
         {TABS.map(tab => {
           const isActive = pathname === tab.href || pathname.startsWith(tab.href + '/')

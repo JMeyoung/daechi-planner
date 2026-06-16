@@ -53,7 +53,7 @@ export default async function OnboardingPage() {
               required
               autoFocus
               placeholder="홍길동"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-transparent"
             />
           </div>
 
@@ -64,7 +64,7 @@ export default async function OnboardingPage() {
             <select
               id="child_grade"
               name="child_grade"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400"
             >
               <option value="">선택 안 함</option>
               <option value="1">중학교 1학년</option>

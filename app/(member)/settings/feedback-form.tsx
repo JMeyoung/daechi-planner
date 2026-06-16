@@ -25,7 +25,7 @@ export default function FeedbackForm() {
     }
   }
 
-  const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+  const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400'
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5">
@@ -35,7 +35,7 @@ export default function FeedbackForm() {
       </p>
 
       {status === 'done' ? (
-        <p className="text-sm text-azure-700 font-medium py-2">✓ 소중한 의견 감사합니다!</p>
+        <p className="text-sm text-navy-700 font-medium py-2">✓ 소중한 의견 감사합니다!</p>
       ) : (
         <div className="space-y-3">
           <textarea
@@ -57,7 +57,7 @@ export default function FeedbackForm() {
           <button
             onClick={handleSubmit}
             disabled={status === 'sending' || !message.trim()}
-            className="w-full bg-blue-700 text-white text-sm font-medium py-2.5 rounded-lg hover:bg-blue-800 transition-colors disabled:opacity-50"
+            className="w-full bg-navy-800 text-white text-sm font-medium py-2.5 rounded-lg hover:bg-navy-900 transition-colors disabled:opacity-50"
           >
             {status === 'sending' ? '보내는 중...' : '보내기'}
           </button>

@@ -39,7 +39,7 @@ export default async function BookmarksPage() {
       {items.length === 0 ? (
         <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
           <p className="text-gray-400 text-sm mb-3">저장한 콘텐츠가 없습니다.</p>
-          <Link href="/briefings" className="text-sm text-blue-700 hover:underline">
+          <Link href="/briefings" className="text-sm text-gold-600 hover:underline">
             브리프 둘러보기 →
           </Link>
         </div>

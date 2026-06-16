@@ -9,7 +9,7 @@ import type { ScheduleEvent, ChildProfile } from '@/types'
 const DAYS_KO = ['일', '월', '화', '수', '목', '금', '토']
 
 const CATEGORY_STYLE = {
-  academy: { card: 'border-blue-200 bg-blue-50', badge: 'bg-blue-100 text-blue-800', label: '학원' },
+  academy: { card: 'border-navy-200 bg-navy-50', badge: 'bg-navy-100 text-navy-800', label: '학원' },
   exam:    { card: 'border-red-200 bg-red-50',   badge: 'bg-red-100 text-red-800',   label: '시험' },
   personal:{ card: 'border-gray-200 bg-white',   badge: 'bg-gray-100 text-gray-600', label: '개인' },
 }
@@ -108,7 +108,7 @@ export default function SchedulePage() {
                   : 'bg-white text-gray-500 border-surface-border hover:border-gray-400'
               }`}
             >
-              <span className={`w-2 h-2 rounded-full ${DOT_COLOR[child.color] ?? 'bg-azure-400'}`} />
+              <span className={`w-2 h-2 rounded-full ${DOT_COLOR[child.color] ?? 'bg-navy-400'}`} />
               {child.name}
             </button>
           ))}
@@ -148,9 +148,9 @@ export default function SchedulePage() {
               onClick={() => setSelectedDay(day)}
               className={`flex flex-col items-center py-2 rounded-xl transition-all duration-150 ${
                 isSelected
-                  ? 'bg-azure-600 text-white shadow-[0_2px_8px_rgba(37,99,235,0.3)]'
+                  ? 'bg-navy-800 text-white shadow-[0_2px_8px_rgba(15,23,42,0.3)]'
                   : isToday
-                  ? 'bg-azure-50 text-azure-700'
+                  ? 'bg-navy-50 text-navy-700'
                   : 'text-gray-500 hover:bg-surface-50'
               }`}
             >
@@ -158,7 +158,7 @@ export default function SchedulePage() {
               <span className="text-sm font-bold">{day.getDate()}</span>
               <span className={`w-1 h-1 rounded-full mt-0.5 transition-colors ${
                 hasEvents
-                  ? isSelected ? 'bg-white/80' : 'bg-azure-400'
+                  ? isSelected ? 'bg-white/80' : 'bg-navy-400'
                   : 'bg-transparent'
               }`} />
             </button>
@@ -172,7 +172,7 @@ export default function SchedulePage() {
           <h2 className="text-sm font-semibold text-gray-700">
             {selectedDay.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })}
           </h2>
-          <Link href="/schedule/new" className="text-sm text-azure-600 font-semibold hover:text-azure-700 transition-colors">
+          <Link href="/schedule/new" className="text-sm text-gold-600 font-semibold hover:text-gold-700 transition-colors">
             + 일정 추가
           </Link>
         </div>
@@ -207,7 +207,7 @@ export default function SchedulePage() {
                       </span>
                       {child && (
                         <span className="flex items-center gap-1 text-xs text-gray-600">
-                          <span className={`w-2 h-2 rounded-full ${DOT_COLOR[child.color] ?? 'bg-azure-400'}`} />
+                          <span className={`w-2 h-2 rounded-full ${DOT_COLOR[child.color] ?? 'bg-navy-400'}`} />
                           {child.name}
                         </span>
                       )}
@@ -239,7 +239,7 @@ export default function SchedulePage() {
       <Link
         href="/schedule/new"
         aria-label="일정 추가"
-        className="fixed bottom-24 right-6 w-14 h-14 bg-azure-gradient text-white rounded-full
+        className="fixed bottom-24 right-6 w-14 h-14 bg-cta-gradient text-white rounded-full
                    flex items-center justify-center shadow-cta
                    hover:shadow-cta-hover hover:-translate-y-0.5
                    transition-all duration-200 text-3xl font-light leading-none"

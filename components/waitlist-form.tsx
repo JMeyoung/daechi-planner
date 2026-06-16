@@ -33,7 +33,7 @@ export default function WaitlistForm({ source = 'landing' }: { source?: string }
 
   if (status === 'done') {
     return (
-      <p className="text-sm text-azure-700 font-medium">
+      <p className="text-sm text-navy-700 font-medium">
         ✓ 등록되었어요. 새 소식이 준비되면 이메일로 알려드릴게요.
       </p>
     )
@@ -46,7 +46,7 @@ export default function WaitlistForm({ source = 'landing' }: { source?: string }
         value={email}
         onChange={e => { setEmail(e.target.value); setStatus('idle') }}
         placeholder="이메일 주소"
-        className="flex-1 border border-gray-300 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-azure-500"
+        className="flex-1 border border-gray-300 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400"
       />
       <button
         type="submit"
