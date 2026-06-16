@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: '대치동 중학생 학부모를 위한 교육 정보 & 일정 관리',
     start_url: '/dashboard',
     display: 'standalone',
-    background_color: '#ffffff',
-    theme_color: '#2563eb',
+    background_color: '#0f172a',
+    theme_color: '#0f172a',
     orientation: 'portrait',
     categories: ['education', 'productivity'],
     icons: [

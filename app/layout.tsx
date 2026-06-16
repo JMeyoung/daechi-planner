@@ -17,6 +17,7 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://daechi-planner.vercel.app'),
   title: {
     default: '대치 플래너',
     template: '%s | 대치 플래너',
@@ -33,8 +34,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: '대치 플래너',
     description: '대치동 중학생 학부모를 위한 교육 정보 & 일정 관리 서비스',
+    url: 'https://daechi-planner.vercel.app',
     locale: 'ko_KR',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '대치 플래너',
+    description: '대치동 중학생 학부모를 위한 교육 정보 & 일정 관리 서비스',
   },
 }
 
