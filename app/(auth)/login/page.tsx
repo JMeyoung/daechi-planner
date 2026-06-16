@@ -88,7 +88,7 @@ function LoginForm() {
         </p>
         <button
           onClick={() => setStep('input')}
-          className="text-sm text-blue-700 hover:underline"
+          className="text-sm text-gold-600 hover:text-gold-700 hover:underline font-medium"
         >
           다른 이메일로 시도하기
         </button>
@@ -98,7 +98,7 @@ function LoginForm() {
 
   return (
     <div className="w-full max-w-sm">
-      <div className="bg-white rounded-2xl border border-gray-200 p-8">
+      <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
         <h1 className="text-xl font-bold text-gray-900 mb-1 text-center">로그인 / 회원가입</h1>
         <p className="text-sm text-gray-500 text-center mb-6">
           이메일 주소를 입력하면 로그인 링크를 보내드립니다.
@@ -117,7 +117,7 @@ function LoginForm() {
               placeholder="example@email.com"
               required
               autoFocus
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-transparent"
             />
           </div>
 
