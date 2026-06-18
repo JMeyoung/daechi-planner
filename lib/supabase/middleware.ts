@@ -1,8 +1,16 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { FEATURES } from '@/lib/features'
 
-const MEMBER_PREFIXES = ['/dashboard', '/settings', '/bookmarks', '/schedule']
+const MEMBER_PREFIXES = ['/dashboard', '/settings', '/bookmarks', '/schedule', '/fees']
 const ADMIN_PREFIX = '/admin'
+
+// Routes that require a feature flag to be enabled
+const FEATURE_ROUTES: [string, boolean][] = [
+  ['/schedule',  FEATURES.schedule],
+  ['/fees',      FEATURES.fees],
+  ['/bookmarks', FEATURES.bookmarks],
+]
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request })
@@ -47,6 +55,14 @@ export async function updateSession(request: NextRequest) {
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('next', path)
     return NextResponse.redirect(loginUrl)
+  }
+
+  // Block disabled features for authenticated members
+  if (user) {
+    const blocked = FEATURE_ROUTES.find(([prefix, enabled]) => !enabled && path.startsWith(prefix))
+    if (blocked) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   if (requiresAdmin) {

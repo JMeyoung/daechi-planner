@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { createClient, getUser } from '@/lib/supabase/server'
 import ContentCard from '@/components/content/content-card'
 import { DOT_COLOR } from '@/lib/child-colors'
+import { FEATURES } from '@/lib/features'
 import type { ContentSummary, Profile, Subscription, ScheduleEvent, ChildProfile } from '@/types'
 
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000
@@ -55,15 +56,23 @@ export default async function DashboardPage() {
   const [profileRes, subRes, contentRes, bookmarkRes, scheduleRes, childrenRes] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     supabase.from('subscriptions').select('*').eq('user_id', user.id).single(),
-    supabase
-      .from('content_items')
-      .select('id, title, summary, category, tags, is_premium, is_published, published_at, author_id, created_at, updated_at')
-      .eq('is_published', true)
-      .order('published_at', { ascending: false })
-      .limit(4),
-    supabase.from('bookmarks').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
-    supabase.from('schedule_events').select('id, title, category, subject, location, start_at, end_at, is_recurring, recur_days, child_id').eq('user_id', user.id),
-    supabase.from('child_profiles').select('*').eq('user_id', user.id).order('sort_order'),
+    FEATURES.briefings
+      ? supabase
+          .from('content_items')
+          .select('id, title, summary, category, tags, is_premium, is_published, published_at, author_id, created_at, updated_at')
+          .eq('is_published', true)
+          .order('published_at', { ascending: false })
+          .limit(4)
+      : Promise.resolve({ data: [] }),
+    FEATURES.bookmarks
+      ? supabase.from('bookmarks').select('id', { count: 'exact', head: true }).eq('user_id', user.id)
+      : Promise.resolve({ count: 0 }),
+    FEATURES.schedule
+      ? supabase.from('schedule_events').select('id, title, category, subject, location, start_at, end_at, is_recurring, recur_days, child_id').eq('user_id', user.id)
+      : Promise.resolve({ data: [] }),
+    FEATURES.schedule
+      ? supabase.from('child_profiles').select('*').eq('user_id', user.id).order('sort_order')
+      : Promise.resolve({ data: [] }),
   ])
 
   const profile = profileRes.data as Profile | null
@@ -119,22 +128,25 @@ export default async function DashboardPage() {
       </div>
 
       {/* ── Quick Stats ────────────────────────────── */}
-      <div className="grid grid-cols-2 gap-3 animate-fade-up-1">
-        <div className="card-lift p-4 text-center">
-          <p className="font-display text-3xl font-bold text-azure-600">{bookmarkCount}</p>
-          <p className="text-xs text-gray-400 mt-1 font-medium">저장한 북마크</p>
+      {(FEATURES.bookmarks || FEATURES.schedule) && (
+        <div className="grid grid-cols-2 gap-3 animate-fade-up-1">
+          {FEATURES.bookmarks && (
+            <div className="card-lift p-4 text-center">
+              <p className="font-display text-3xl font-bold text-azure-600">{bookmarkCount}</p>
+              <p className="text-xs text-gray-400 mt-1 font-medium">저장한 북마크</p>
+            </div>
+          )}
+          {FEATURES.schedule && (
+            <Link href="/schedule" className="card-lift p-4 text-center">
+              <p className="font-display text-3xl font-bold text-azure-600">{todayEvents.length}</p>
+              <p className="text-xs text-gray-400 mt-1 font-medium">오늘 일정</p>
+            </Link>
+          )}
         </div>
-        <Link
-          href="/schedule"
-          className="card-lift p-4 text-center"
-        >
-          <p className="font-display text-3xl font-bold text-azure-600">{todayEvents.length}</p>
-          <p className="text-xs text-gray-400 mt-1 font-medium">오늘 일정</p>
-        </Link>
-      </div>
+      )}
 
       {/* ── 오늘의 일정 ────────────────────────────── */}
-      <div className="animate-fade-up-2">
+      {FEATURES.schedule && <div className="animate-fade-up-2">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-gray-900">오늘의 일정</h2>
           <Link href="/schedule" className="text-sm text-azure-600 font-medium hover:text-azure-700 transition-colors">
@@ -188,10 +200,10 @@ export default async function DashboardPage() {
             })}
           </div>
         )}
-      </div>
+      </div>}
 
       {/* ── 최신 브리프 ────────────────────────────── */}
-      <div className="animate-fade-up-3">
+      {FEATURES.briefings && <div className="animate-fade-up-3">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-gray-900">최신 브리프</h2>
           <Link href="/briefings" className="text-sm text-azure-600 font-medium hover:text-azure-700 transition-colors">
@@ -210,7 +222,7 @@ export default async function DashboardPage() {
             <p className="text-gray-400 text-sm">아직 게시된 콘텐츠가 없습니다.</p>
           </div>
         )}
-      </div>
+      </div>}
     </div>
   )
 }
