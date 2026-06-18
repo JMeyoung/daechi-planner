@@ -112,3 +112,27 @@ export type AcademyFee = {
   is_active: boolean
   created_at: string
 }
+
+export type DdayCounter = {
+  id: string
+  user_id: string
+  title: string
+  target_date: string
+  emoji: string
+  color: string
+  created_at: string
+}
+
+
+export type TeacherMemo = {
+  id: string
+  user_id: string
+  child_id: string | null
+  academy_name: string
+  teacher_name: string
+  subject: string | null
+  phone: string | null
+  memo: string | null
+  created_at: string
+  updated_at: string
+}

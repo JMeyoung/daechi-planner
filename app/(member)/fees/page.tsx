@@ -6,7 +6,7 @@ import { CHILD_COLORS, BADGE_COLOR, DOT_COLOR } from '@/lib/child-colors'
 import type { AcademyFee, ChildProfile } from '@/types'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  Cell, PieChart, Pie, Legend,
+  Cell, PieChart, Pie,
 } from 'recharts'
 
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
@@ -103,6 +103,22 @@ export default function FeesPage() {
     })
   }, [activeFees, children])
 
+  // 학원별 도넛 데이터
+  const DONUT_COLORS = ['#2d4470', '#d4a853', '#047857', '#9f1239', '#78716c', '#1e293b', '#b8923a']
+  const academyPieData = useMemo(() => {
+    const map: Record<string, number> = {}
+    activeFees.forEach(f => {
+      map[f.name] = (map[f.name] ?? 0) + f.amount
+    })
+    return Object.entries(map)
+      .sort(([, a], [, b]) => b - a)
+      .map(([name, value], i) => ({
+        name,
+        value,
+        color: DONUT_COLORS[i % DONUT_COLORS.length],
+      }))
+  }, [activeFees])
+
   function startAdd() {
     setEditing(null)
     setForm(emptyForm)
@@ -193,7 +209,7 @@ export default function FeesPage() {
       )}
 
       {/* 요약 카드 */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <div className="bg-white rounded-xl border border-gray-200 p-4">
           <p className="text-xs text-gray-500 mb-1">월 총 학원비</p>
           <p className="text-xl font-bold text-gray-900">{formatAmount(monthlyTotal)}</p>
@@ -202,9 +218,48 @@ export default function FeesPage() {
           <p className="text-xs text-gray-500 mb-1">연간 예상</p>
           <p className="text-xl font-bold text-navy-900">{formatAmount(yearlyTotal)}</p>
         </div>
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-xs text-gray-500 mb-1">등록 학원</p>
+          <p className="text-xl font-bold text-gold-600">{activeFees.length}개</p>
+        </div>
       </div>
 
-      {/* 차트 */}
+      {/* 학원별 비율 도넛 차트 */}
+      {activeFees.length > 0 && (
+        <div className="bg-white rounded-xl border border-gray-200 p-4">
+          <p className="text-sm font-semibold text-gray-900 mb-3">학원별 비율</p>
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie
+                data={academyPieData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                innerRadius={50}
+                outerRadius={75}
+                paddingAngle={2}
+                label={({ name, percent }) => `${name} ${((percent ?? 0)*100).toFixed(0)}%`}
+                labelLine={false}
+              >
+                {academyPieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
+              </Pie>
+              <Tooltip formatter={(v) => formatAmount(Number(v))} />
+            </PieChart>
+          </ResponsiveContainer>
+          {/* 범례 */}
+          <div className="flex flex-wrap gap-3 mt-2 justify-center">
+            {academyPieData.map((entry, i) => (
+              <div key={i} className="flex items-center gap-1.5 text-xs text-gray-600">
+                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
+                {entry.name} · {formatAmount(entry.value)}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 지출 현황 차트 */}
       {monthlyTotal > 0 && (
         <div className="bg-white rounded-xl border border-gray-200 p-4">
           <div className="flex items-center justify-between mb-4">
@@ -220,33 +275,18 @@ export default function FeesPage() {
           </div>
 
           {chartView === 'monthly' ? (
-            <>
-              <ResponsiveContainer width="100%" height={160}>
-                <BarChart data={monthlyChartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => v === 0 ? '' : `${(v/10000).toFixed(0)}만`} />
-                  <Tooltip formatter={(v) => formatAmount(Number(v))} />
-                  <Bar dataKey="금액" radius={[4,4,0,0]}>
-                    {monthlyChartData.map((_, i) => (
-                      <Cell key={i} fill={i === new Date().getMonth() ? '#1e293b' : '#e2e8f0'} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-              {/* 자녀별 파이 */}
-              {pieData.length > 1 && (
-                <div className="mt-4">
-                  <ResponsiveContainer width="100%" height={160}>
-                    <PieChart>
-                      <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60} label={({ name, percent }) => `${name} ${((percent ?? 0)*100).toFixed(0)}%`} labelLine={false}>
-                        {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-                      </Pie>
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-            </>
+            <ResponsiveContainer width="100%" height={160}>
+              <BarChart data={monthlyChartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => v === 0 ? '' : `${(v/10000).toFixed(0)}만`} />
+                <Tooltip formatter={(v) => formatAmount(Number(v))} />
+                <Bar dataKey="금액" radius={[4,4,0,0]}>
+                  {monthlyChartData.map((_, i) => (
+                    <Cell key={i} fill={i === new Date().getMonth() ? '#1e293b' : '#e2e8f0'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           ) : (
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={yearlyChartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
@@ -256,6 +296,27 @@ export default function FeesPage() {
                 <Bar dataKey="금액" fill="#1e293b" radius={[4,4,0,0]} />
               </BarChart>
             </ResponsiveContainer>
+          )}
+
+          {/* 자녀별 비교 (2명 이상일 때) */}
+          {pieData.length > 1 && (
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <p className="text-xs font-semibold text-gray-500 mb-3">자녀별 비교</p>
+              <div className="space-y-2">
+                {pieData.map((entry, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <span className="text-xs text-gray-600 w-16 truncate">{entry.name}</span>
+                    <div className="flex-1 bg-gray-100 rounded-full h-4 overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{ width: `${(entry.value / monthlyTotal) * 100}%`, backgroundColor: entry.color }}
+                      />
+                    </div>
+                    <span className="text-xs font-semibold text-gray-700 w-20 text-right">{formatAmount(entry.value)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       )}

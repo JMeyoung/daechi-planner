@@ -3,8 +3,10 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient, getUser } from '@/lib/supabase/server'
 import ContentCard from '@/components/content/content-card'
+import DdayWidget from '@/components/dashboard/dday-widget'
 import { DOT_COLOR } from '@/lib/child-colors'
-import type { ContentSummary, Profile, Subscription, ScheduleEvent, ChildProfile } from '@/types'
+import { detectConflicts } from '@/lib/schedule-conflicts'
+import type { ContentSummary, Profile, Subscription, ScheduleEvent, ChildProfile, DdayCounter, TeacherMemo } from '@/types'
 
 const KST_OFFSET_MS = 9 * 60 * 60 * 1000
 
@@ -52,7 +54,7 @@ export default async function DashboardPage() {
   const [user, supabase] = await Promise.all([getUser(), createClient()])
   if (!user) redirect('/login')
 
-  const [profileRes, subRes, contentRes, bookmarkRes, scheduleRes, childrenRes] = await Promise.all([
+  const [profileRes, subRes, contentRes, bookmarkRes, scheduleRes, childrenRes, ddayRes, teacherRes] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     supabase.from('subscriptions').select('*').eq('user_id', user.id).single(),
     supabase
@@ -64,6 +66,8 @@ export default async function DashboardPage() {
     supabase.from('bookmarks').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
     supabase.from('schedule_events').select('id, title, category, subject, location, start_at, end_at, is_recurring, recur_days, child_id').eq('user_id', user.id),
     supabase.from('child_profiles').select('*').eq('user_id', user.id).order('sort_order'),
+    supabase.from('dday_counters').select('*').eq('user_id', user.id).order('target_date'),
+    supabase.from('teacher_memos').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
   ])
 
   const profile = profileRes.data as Profile | null
@@ -73,6 +77,8 @@ export default async function DashboardPage() {
   const recentContent = (contentRes.data ?? []) as ContentSummary[]
   const bookmarkCount = bookmarkRes.count ?? 0
   const isPremium = subscription?.plan === 'premium' && subscription?.status === 'active'
+  const ddayCounters = (ddayRes.data ?? []) as DdayCounter[]
+  const teacherCount = teacherRes.count ?? 0
 
   const todayKST = getTodayKST()
   const children = (childrenRes.data ?? []) as ChildProfile[]
@@ -89,6 +95,16 @@ export default async function DashboardPage() {
       const tb = new Date(b.start_at)
       return ta.getHours() * 60 + ta.getMinutes() - (tb.getHours() * 60 + tb.getMinutes())
     })
+
+  // 다자녀 충돌 감지
+  const conflicts = children.length >= 2
+    ? detectConflicts(allEvents, children, todayKST.dow)
+    : []
+
+  // 입시 관련 최신 브리프
+  const admissionBrief = recentContent.find(c =>
+    c.tags?.some(t => t.includes('입시') || t.includes('대입') || t.includes('수능') || t.includes('내신'))
+  )
 
   return (
     <div className="space-y-6">
@@ -122,8 +138,13 @@ export default async function DashboardPage() {
         */}
       </div>
 
+      {/* ── D-day 카운터 ───────────────────────────── */}
+      <div className="animate-fade-up-1">
+        <DdayWidget counters={ddayCounters} />
+      </div>
+
       {/* ── Quick Stats ────────────────────────────── */}
-      <div className="grid grid-cols-2 gap-3 animate-fade-up-1">
+      <div className="grid grid-cols-3 gap-3 animate-fade-up-1">
         <div className="card-lift p-4 text-center">
           <p className="font-display text-3xl font-bold text-navy-800">{bookmarkCount}</p>
           <p className="text-xs text-gray-400 mt-1 font-medium">저장한 북마크</p>
@@ -135,7 +156,41 @@ export default async function DashboardPage() {
           <p className="font-display text-3xl font-bold text-navy-800">{todayEvents.length}</p>
           <p className="text-xs text-gray-400 mt-1 font-medium">오늘 일정</p>
         </Link>
+        <Link
+          href="/teachers"
+          className="card-lift p-4 text-center"
+        >
+          <p className="font-display text-3xl font-bold text-navy-800">{teacherCount}</p>
+          <p className="text-xs text-gray-400 mt-1 font-medium">선생님 메모</p>
+        </Link>
       </div>
+
+      {/* ── 다자녀 픽업 충돌 경고 ──────────────────── */}
+      {conflicts.length > 0 && (
+        <div className="animate-fade-up-2">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 space-y-2">
+            <p className="text-xs font-semibold text-red-700 flex items-center gap-1.5">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+              </span>
+              ⚠️ 오늘 픽업 충돌 감지!
+            </p>
+            {conflicts.map((c, i) => (
+              <div key={i} className="text-sm text-red-800">
+                <span className="font-medium">{c.child1.name}</span>
+                <span className="text-red-500"> ({c.event1.title} {fmtTime(c.event1.start_at)}~{c.event1.end_at ? fmtTime(c.event1.end_at) : ''})</span>
+                <span className="text-red-400 mx-1">↔</span>
+                <span className="font-medium">{c.child2.name}</span>
+                <span className="text-red-500"> ({c.event2.title} {fmtTime(c.event2.start_at)}~{c.event2.end_at ? fmtTime(c.event2.end_at) : ''})</span>
+              </div>
+            ))}
+            <Link href="/schedule" className="text-xs text-red-600 font-medium hover:underline">
+              일정 확인하기 →
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* ── 오늘의 일정 ────────────────────────────── */}
       <div className="animate-fade-up-2">
@@ -193,6 +248,23 @@ export default async function DashboardPage() {
           </div>
         )}
       </div>
+
+      {/* ── 주간 입시 브리프 하이라이트 ─────────────── */}
+      {admissionBrief && (
+        <div className="animate-fade-up-3">
+          <Link
+            href={`/briefings/${admissionBrief.id}`}
+            className="block bg-gradient-to-br from-navy-800 to-navy-900 rounded-xl p-4 hover:from-navy-700 hover:to-navy-800 transition-all"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-gold-400/20 text-gold-300 font-semibold">📢 입시 브리프</span>
+            </div>
+            <h3 className="text-sm font-semibold text-white mb-1">{admissionBrief.title}</h3>
+            <p className="text-xs text-white/60 line-clamp-2">{admissionBrief.summary}</p>
+            <span className="text-xs text-gold-400/70 mt-2 inline-block">자세히 보기 →</span>
+          </Link>
+        </div>
+      )}
 
       {/* ── 최신 브리프 ────────────────────────────── */}
       <div className="animate-fade-up-3">
