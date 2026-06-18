@@ -5,6 +5,7 @@ import { createClient, getUser } from '@/lib/supabase/server'
 import ContentCard from '@/components/content/content-card'
 import DdayWidget from '@/components/dashboard/dday-widget'
 import { DOT_COLOR } from '@/lib/child-colors'
+import { FEATURES } from '@/lib/features'
 import { detectConflicts } from '@/lib/schedule-conflicts'
 import type { ContentSummary, Profile, Subscription, ScheduleEvent, ChildProfile, DdayCounter, TeacherMemo } from '@/types'
 
@@ -57,14 +58,20 @@ export default async function DashboardPage() {
   const [profileRes, subRes, contentRes, bookmarkRes, scheduleRes, childrenRes, ddayRes, teacherRes] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     supabase.from('subscriptions').select('*').eq('user_id', user.id).single(),
-    supabase
-      .from('content_items')
-      .select('id, title, summary, category, tags, is_premium, is_published, published_at, author_id, created_at, updated_at')
-      .eq('is_published', true)
-      .order('published_at', { ascending: false })
-      .limit(4),
-    supabase.from('bookmarks').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
-    supabase.from('schedule_events').select('id, title, category, subject, location, start_at, end_at, is_recurring, recur_days, child_id').eq('user_id', user.id),
+    FEATURES.briefings
+      ? supabase
+          .from('content_items')
+          .select('id, title, summary, category, tags, is_premium, is_published, published_at, author_id, created_at, updated_at')
+          .eq('is_published', true)
+          .order('published_at', { ascending: false })
+          .limit(4)
+      : Promise.resolve({ data: [] }),
+    FEATURES.bookmarks
+      ? supabase.from('bookmarks').select('id', { count: 'exact', head: true }).eq('user_id', user.id)
+      : Promise.resolve({ count: 0 }),
+    FEATURES.schedule
+      ? supabase.from('schedule_events').select('id, title, category, subject, location, start_at, end_at, is_recurring, recur_days, child_id').eq('user_id', user.id)
+      : Promise.resolve({ data: [] }),
     supabase.from('child_profiles').select('*').eq('user_id', user.id).order('sort_order'),
     supabase.from('dday_counters').select('*').eq('user_id', user.id).order('target_date'),
     supabase.from('teacher_memos').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
@@ -75,10 +82,10 @@ export default async function DashboardPage() {
 
   const subscription = subRes.data as Subscription | null
   const recentContent = (contentRes.data ?? []) as ContentSummary[]
-  const bookmarkCount = bookmarkRes.count ?? 0
+  const bookmarkCount = (bookmarkRes as { count?: number | null }).count ?? 0
   const isPremium = subscription?.plan === 'premium' && subscription?.status === 'active'
   const ddayCounters = (ddayRes.data ?? []) as DdayCounter[]
-  const teacherCount = teacherRes.count ?? 0
+  const teacherCount = (teacherRes as { count?: number | null }).count ?? 0
 
   const todayKST = getTodayKST()
   const children = (childrenRes.data ?? []) as ChildProfile[]
@@ -96,7 +103,7 @@ export default async function DashboardPage() {
       return ta.getHours() * 60 + ta.getMinutes() - (tb.getHours() * 60 + tb.getMinutes())
     })
 
-  // 다자녀 충돌 감지
+  // 다자녀 픽업 충돌 감지
   const conflicts = children.length >= 2
     ? detectConflicts(allEvents, children, todayKST.dow)
     : []
@@ -144,26 +151,26 @@ export default async function DashboardPage() {
       </div>
 
       {/* ── Quick Stats ────────────────────────────── */}
-      <div className="grid grid-cols-3 gap-3 animate-fade-up-1">
-        <div className="card-lift p-4 text-center">
-          <p className="font-display text-3xl font-bold text-navy-800">{bookmarkCount}</p>
-          <p className="text-xs text-gray-400 mt-1 font-medium">저장한 북마크</p>
+      {(FEATURES.bookmarks || FEATURES.schedule) && (
+        <div className="grid grid-cols-3 gap-3 animate-fade-up-1">
+          {FEATURES.bookmarks && (
+            <div className="card-lift p-4 text-center">
+              <p className="font-display text-3xl font-bold text-navy-800">{bookmarkCount}</p>
+              <p className="text-xs text-gray-400 mt-1 font-medium">저장한 북마크</p>
+            </div>
+          )}
+          {FEATURES.schedule && (
+            <Link href="/schedule" className="card-lift p-4 text-center">
+              <p className="font-display text-3xl font-bold text-navy-800">{todayEvents.length}</p>
+              <p className="text-xs text-gray-400 mt-1 font-medium">오늘 일정</p>
+            </Link>
+          )}
+          <Link href="/teachers" className="card-lift p-4 text-center">
+            <p className="font-display text-3xl font-bold text-navy-800">{teacherCount}</p>
+            <p className="text-xs text-gray-400 mt-1 font-medium">선생님 메모</p>
+          </Link>
         </div>
-        <Link
-          href="/schedule"
-          className="card-lift p-4 text-center"
-        >
-          <p className="font-display text-3xl font-bold text-navy-800">{todayEvents.length}</p>
-          <p className="text-xs text-gray-400 mt-1 font-medium">오늘 일정</p>
-        </Link>
-        <Link
-          href="/teachers"
-          className="card-lift p-4 text-center"
-        >
-          <p className="font-display text-3xl font-bold text-navy-800">{teacherCount}</p>
-          <p className="text-xs text-gray-400 mt-1 font-medium">선생님 메모</p>
-        </Link>
-      </div>
+      )}
 
       {/* ── 다자녀 픽업 충돌 경고 ──────────────────── */}
       {conflicts.length > 0 && (
@@ -193,7 +200,7 @@ export default async function DashboardPage() {
       )}
 
       {/* ── 오늘의 일정 ────────────────────────────── */}
-      <div className="animate-fade-up-2">
+      {FEATURES.schedule && <div className="animate-fade-up-2">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-gray-900">오늘의 일정</h2>
           <Link href="/schedule" className="text-sm text-gold-600 font-medium hover:text-gold-700 transition-colors">
@@ -247,10 +254,10 @@ export default async function DashboardPage() {
             })}
           </div>
         )}
-      </div>
+      </div>}
 
       {/* ── 주간 입시 브리프 하이라이트 ─────────────── */}
-      {admissionBrief && (
+      {FEATURES.briefings && admissionBrief && (
         <div className="animate-fade-up-3">
           <Link
             href={`/briefings/${admissionBrief.id}`}
@@ -267,7 +274,7 @@ export default async function DashboardPage() {
       )}
 
       {/* ── 최신 브리프 ────────────────────────────── */}
-      <div className="animate-fade-up-3">
+      {FEATURES.briefings && <div className="animate-fade-up-3">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-gray-900">최신 브리프</h2>
           <Link href="/briefings" className="text-sm text-gold-600 font-medium hover:text-gold-700 transition-colors">
@@ -286,7 +293,7 @@ export default async function DashboardPage() {
             <p className="text-gray-400 text-sm">아직 게시된 콘텐츠가 없습니다.</p>
           </div>
         )}
-      </div>
+      </div>}
     </div>
   )
 }

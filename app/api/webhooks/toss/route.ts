@@ -1,22 +1,35 @@
 import { NextResponse } from 'next/server'
+import { z } from 'zod'
 import { createServiceClient } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 
-type TossWebhookPayload = {
-  eventType: string
-  createdAt: string
-  data: {
-    paymentKey?: string
-    orderId?: string
-    status?: string
-    billingKey?: string
-    customerKey?: string
-  }
-}
+const tossWebhookSchema = z.object({
+  eventType: z.string(),
+  createdAt: z.string(),
+  data: z.object({
+    paymentKey: z.string().optional(),
+    orderId: z.string().optional(),
+    status: z.string().optional(),
+    billingKey: z.string().optional(),
+    customerKey: z.string().optional(),
+  }),
+})
 
 export async function POST(request: Request) {
-  const payload = (await request.json()) as TossWebhookPayload
+  // Verify Toss webhook authenticity: Authorization: Basic base64(secretKey:)
+  const authHeader = request.headers.get('Authorization')
+  const expected = 'Basic ' + Buffer.from(`${process.env.TOSS_SECRET_KEY}:`).toString('base64')
+  if (!authHeader || authHeader !== expected) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const body = await request.json()
+  const parsed = tossWebhookSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Invalid payload' }, { status: 400 })
+  }
+  const payload = parsed.data
   const supabase = createServiceClient()
 
   switch (payload.eventType) {
