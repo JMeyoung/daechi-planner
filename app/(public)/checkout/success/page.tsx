@@ -14,11 +14,11 @@ export default function CheckoutSuccessPage() {
       </div>
 
       <h1 className="font-display text-2xl font-bold text-gray-900 mb-2">
-        프리미엄 시작을 환영합니다!
+        스탠다드 시작을 환영합니다!
       </h1>
       <p className="text-gray-500 mb-2">결제가 완료되었습니다.</p>
       <p className="text-sm text-gray-400 mb-10">
-        프리미엄 브리프와 심층 분석 리포트를 모두 열람하실 수 있습니다.
+        스탠다드 브리프와 심층 분석 리포트를 모두 열람하실 수 있습니다.
       </p>
 
       <div className="flex flex-col sm:flex-row gap-3">

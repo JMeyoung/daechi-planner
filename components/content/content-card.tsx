@@ -33,7 +33,8 @@ function LockIcon() {
 }
 
 export default function ContentCard({ item, showLock = true }: ContentCardProps) {
-  const isLocked = showLock && item.is_premium
+  // 오픈 베타 기간 동안 자물쇠 해제 (임시)
+  const isLocked = false // showLock && item.is_premium
 
   return (
     <Link
@@ -44,19 +45,19 @@ export default function ContentCard({ item, showLock = true }: ContentCardProps)
         <div className="flex items-center gap-1.5 flex-wrap">
           <Badge category={item.category} />
           {item.is_premium && (
-            <Badge variant="orange">프리미엄</Badge>
+            <Badge variant="gold">스탠다드</Badge>
           )}
         </div>
         {isLocked && <LockIcon />}
       </div>
 
-      <h3 className={`font-semibold text-[15px] leading-[1.4] text-gray-900 group-hover:text-azure-700 transition-colors mb-1.5 ${isLocked ? 'opacity-50' : ''}`}>
+      <h3 className={`font-semibold text-[15px] leading-[1.4] text-gray-900 group-hover:text-navy-800 transition-colors mb-1.5 ${isLocked ? 'opacity-50' : ''}`}>
         {item.title}
       </h3>
 
       {item.summary && (
         <p className={`text-sm text-gray-500 leading-relaxed line-clamp-2 mb-3 ${isLocked ? 'opacity-40' : ''}`}>
-          {isLocked ? '프리미엄 회원에게만 공개됩니다.' : item.summary}
+          {isLocked ? '스탠다드 회원에게만 공개됩니다.' : item.summary}
         </p>
       )}
 

@@ -4,7 +4,8 @@
 
 @layer base {
   :root {
-    --color-brand: 37 99 235;
+    --color-brand: 15 23 42;
+    --color-accent: 212 168 83;
   }
 
   html {
@@ -53,46 +54,61 @@
 
   /* ── Hero noise overlay ─────────────────── */
   .hero-noise {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
     background-size: 200px;
   }
 
   /* ── Card lift ───────────────────────────── */
   .card-lift {
-    @apply bg-white rounded-2xl shadow-card border border-transparent
+    @apply bg-white rounded-2xl shadow-card border border-surface-border
            transition-all duration-200 ease-out
-           hover:-translate-y-1 hover:shadow-card-hover hover:border-surface-border;
+           hover:-translate-y-1 hover:shadow-card-hover hover:border-gold-200;
   }
   .card-lift:active {
     @apply translate-y-0 shadow-card;
   }
 
-  /* ── CTA button ─────────────────────────── */
+  /* ── CTA button (Gold) ─────────────────── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2
-           bg-cta-gradient text-white font-semibold rounded-full
+           bg-cta-gradient text-navy-950 font-semibold rounded-full
            shadow-cta px-6 py-3
            transition-all duration-200 ease-out
            hover:-translate-y-px hover:shadow-cta-hover
            active:translate-y-0 active:shadow-cta
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure-500 focus-visible:ring-offset-2;
-  }
-  .btn-ghost-white {
-    @apply inline-flex items-center justify-center gap-2
-           text-white border border-white/30 backdrop-blur-sm bg-white/10
-           font-medium rounded-full px-6 py-3
-           transition-all duration-200 ease-out
-           hover:bg-white/20;
-  }
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2
-           text-azure-700 border border-azure-700 font-medium rounded-full px-6 py-3
-           transition-all duration-200 ease-out
-           hover:bg-azure-50;
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2;
   }
 
-  /* ── Section label ──────────────────────── */
+  /* ── Ghost button (on dark) ──────────────── */
+  .btn-ghost-white {
+    @apply inline-flex items-center justify-center gap-2
+           text-white border border-white/25 backdrop-blur-sm bg-white/5
+           font-medium rounded-full px-6 py-3
+           transition-all duration-200 ease-out
+           hover:bg-white/15 hover:border-white/40;
+  }
+
+  /* ── Outline button ─────────────────────── */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2
+           text-navy-800 border border-navy-200 font-medium rounded-full px-6 py-3
+           transition-all duration-200 ease-out
+           hover:bg-navy-50;
+  }
+
+  /* ── Section label (Gold) ───────────────── */
   .section-eyebrow {
-    @apply text-xs font-semibold tracking-widest uppercase text-azure-400;
+    @apply text-xs font-semibold tracking-[0.2em] uppercase text-gold-500;
+  }
+
+  /* ── Gold accent line ──────────────────── */
+  .gold-line {
+    @apply w-8 h-0.5 bg-gradient-to-r from-gold-400 to-gold-600 rounded-full;
+  }
+
+  /* ── Premium card (dark) ───────────────── */
+  .card-dark {
+    @apply bg-navy-900 rounded-2xl border border-navy-700/50
+           transition-all duration-200 ease-out;
   }
 }

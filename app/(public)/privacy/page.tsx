@@ -25,7 +25,7 @@ export default function PrivacyPage() {
           <ul>
             <li>회원 가입 및 본인 확인</li>
             <li>교육 일정 관리 및 브리프 콘텐츠 제공</li>
-            <li>프리미엄 구독 결제 처리 및 구독 관리</li>
+            <li>스탠다드 구독 결제 처리 및 구독 관리</li>
             <li>서비스 이용 문의 응대 및 공지 발송</li>
           </ul>
         </Section>

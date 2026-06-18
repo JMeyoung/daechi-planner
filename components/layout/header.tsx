@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 const NAV_LINKS = [
   { href: '/intro', label: '서비스 소개' },
   { href: '/briefings', label: '브리프 둘러보기' },
-  { href: '/pricing', label: '요금제' },
+  // { href: '/pricing', label: '요금제' }, // 베타 기간 동안 숨김
 ]
 
 export default function Header({ userEmail }: { userEmail?: string | null }) {
@@ -48,7 +48,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
         <Link
           href="/"
           className={`font-display font-bold text-lg tracking-tight transition-colors ${
-            scrolled || !isHome ? 'text-azure-700' : 'text-white'
+            scrolled || !isHome ? 'text-navy-900' : 'text-white'
           }`}
         >
           대치 플래너
@@ -63,11 +63,11 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
               className={`transition-colors font-medium ${
                 scrolled || !isHome
                   ? pathname === link.href
-                    ? 'text-azure-700'
-                    : 'text-gray-500 hover:text-azure-700'
+                    ? 'text-navy-900'
+                    : 'text-gray-500 hover:text-navy-900'
                   : pathname === link.href
                     ? 'text-white'
-                    : 'text-white/70 hover:text-white'
+                    : 'text-white/60 hover:text-white'
               }`}
             >
               {link.label}
@@ -82,7 +82,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
               <Link
                 href="/dashboard"
                 className={`text-sm font-medium transition-colors ${
-                  scrolled || !isHome ? 'text-gray-600 hover:text-azure-700' : 'text-white/80 hover:text-white'
+                  scrolled || !isHome ? 'text-gray-600 hover:text-navy-900' : 'text-white/70 hover:text-white'
                 }`}
               >
                 내 플래너
@@ -90,7 +90,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
               <button
                 onClick={handleSignOut}
                 className={`text-sm transition-colors ${
-                  scrolled || !isHome ? 'text-gray-400 hover:text-gray-600' : 'text-white/60 hover:text-white'
+                  scrolled || !isHome ? 'text-gray-400 hover:text-gray-600' : 'text-white/40 hover:text-white/70'
                 }`}
               >
                 로그아웃
@@ -101,7 +101,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
               <Link
                 href="/login"
                 className={`text-sm font-medium transition-colors ${
-                  scrolled || !isHome ? 'text-gray-600 hover:text-azure-700' : 'text-white/80 hover:text-white'
+                  scrolled || !isHome ? 'text-gray-600 hover:text-navy-900' : 'text-white/70 hover:text-white'
                 }`}
               >
                 로그인
@@ -110,11 +110,11 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
                 href="/login?signup=1"
                 className={`text-sm font-semibold px-4 py-1.5 rounded-full transition-all duration-200 ${
                   scrolled || !isHome
-                    ? 'bg-azure-600 text-white shadow-cta hover:shadow-cta-hover hover:-translate-y-px'
-                    : 'bg-white text-azure-700 hover:bg-azure-50'
+                    ? 'bg-cta-gradient text-navy-950 shadow-cta hover:shadow-cta-hover hover:-translate-y-px'
+                    : 'bg-white/10 text-white border border-white/20 hover:bg-white/20'
                 }`}
               >
-                무료로 시작
+                시작하기
               </Link>
             </>
           )}
@@ -148,8 +148,8 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
               href={link.href}
               className={`block text-sm py-2 font-medium transition-colors rounded-lg px-2 ${
                 pathname === link.href
-                  ? 'text-azure-700 bg-azure-50'
-                  : 'text-gray-700 hover:text-azure-700 hover:bg-surface-50'
+                  ? 'text-navy-900 bg-gold-50'
+                  : 'text-gray-700 hover:text-navy-900 hover:bg-surface-50'
               }`}
               onClick={() => setMenuOpen(false)}
             >
@@ -167,10 +167,10 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
                 <Link href="/login" className="text-sm text-gray-700 py-2 px-2" onClick={() => setMenuOpen(false)}>로그인</Link>
                 <Link
                   href="/login?signup=1"
-                  className="text-sm bg-azure-600 text-white font-semibold px-4 py-2 rounded-full text-center shadow-cta"
+                  className="text-sm bg-cta-gradient text-navy-950 font-semibold px-4 py-2 rounded-full text-center shadow-cta"
                   onClick={() => setMenuOpen(false)}
                 >
-                  무료로 시작
+                  시작하기
                 </Link>
               </>
             )}

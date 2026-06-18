@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Noto_Sans_KR, Outfit } from 'next/font/google'
+import { Noto_Sans_KR, Playfair_Display } from 'next/font/google'
 import './globals.css'
 
 const notoSansKR = Noto_Sans_KR({
@@ -9,14 +9,15 @@ const notoSansKR = Noto_Sans_KR({
   variable: '--font-noto',
 })
 
-const outfit = Outfit({
+const playfair = Playfair_Display({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
-  variable: '--font-outfit',
+  variable: '--font-playfair',
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://daechi-planner.vercel.app'),
   title: {
     default: '대치 플래너',
     template: '%s | 대치 플래너',
@@ -33,8 +34,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: '대치 플래너',
     description: '대치동 중학생 학부모를 위한 교육 정보 & 일정 관리 서비스',
+    url: 'https://daechi-planner.vercel.app',
     locale: 'ko_KR',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '대치 플래너',
+    description: '대치동 중학생 학부모를 위한 교육 정보 & 일정 관리 서비스',
   },
 }
 
@@ -42,14 +49,14 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#2563eb',
+  themeColor: '#0f172a',
   viewportFit: 'cover',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body className={`${notoSansKR.variable} ${outfit.variable} font-sans antialiased`}>
+      <body className={`${notoSansKR.variable} ${playfair.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>

@@ -53,7 +53,7 @@ export default async function OnboardingPage() {
               required
               autoFocus
               placeholder="홍길동"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400 focus:border-transparent"
             />
           </div>
 
@@ -64,7 +64,7 @@ export default async function OnboardingPage() {
             <select
               id="child_grade"
               name="child_grade"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400"
             >
               <option value="">선택 안 함</option>
               <option value="1">중학교 1학년</option>
@@ -78,7 +78,7 @@ export default async function OnboardingPage() {
 
           <button
             type="submit"
-            className="w-full bg-blue-700 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-blue-800 transition-colors"
+            className="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-navy-950 font-semibold rounded-full py-2.5 text-sm shadow-[0_4px_14px_rgba(212,168,83,0.35)] hover:shadow-[0_8px_20px_rgba(212,168,83,0.45)] hover:-translate-y-0.5 transition-all"
           >
             대치 플래너 시작하기
           </button>

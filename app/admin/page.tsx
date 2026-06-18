@@ -21,7 +21,7 @@ export default async function AdminDashboardPage() {
   const stats = [
     { label: '총 콘텐츠', value: contentRes.count ?? 0 },
     { label: '가입 회원', value: memberRes.count ?? 0 },
-    { label: '프리미엄 구독', value: premiumRes.count ?? 0 },
+    { label: '스탠다드 구독', value: premiumRes.count ?? 0 },
   ]
 
   return (
@@ -70,6 +70,12 @@ export default async function AdminDashboardPage() {
             className="text-sm text-center border border-gray-200 rounded-lg p-3 hover:border-blue-400 hover:bg-blue-50 transition-colors text-gray-600"
           >
             쿠폰 관리
+          </Link>
+          <Link
+            href="/admin/feedback"
+            className="text-sm text-center border border-gray-200 rounded-lg p-3 hover:border-blue-400 hover:bg-blue-50 transition-colors text-gray-600"
+          >
+            의견 · 대기자
           </Link>
           <Link
             href="/briefings"

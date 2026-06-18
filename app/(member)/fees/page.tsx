@@ -12,8 +12,11 @@ import {
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
 
 const COLOR_MAP: Record<string, string> = {
-  blue: '#3b82f6', green: '#22c55e', red: '#ef4444',
-  yellow: '#eab308', purple: '#a855f7', pink: '#ec4899',
+  blue: '#2d4470',   // navy-600
+  orange: '#d4a853', // gold-400
+  emerald: '#047857',// emerald-700
+  pink: '#9f1239',   // rose-800
+  violet: '#78716c', // stone-500
 }
 
 function formatAmount(n: number) {
@@ -161,15 +164,15 @@ export default function FeesPage() {
     setFees(prev => prev.map(f => f.id === fee.id ? { ...f, is_active: !f.is_active } : f))
   }
 
-  const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+  const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400'
 
-  if (loading) return <div className="flex items-center justify-center h-40"><div className="w-6 h-6 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin" /></div>
+  if (loading) return <div className="flex items-center justify-center h-40"><div className="w-6 h-6 border-2 border-navy-200 border-t-navy-800 rounded-full animate-spin" /></div>
 
   return (
     <div className="max-w-lg space-y-5">
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-bold text-gray-900">학원비 관리</h1>
-        <button onClick={startAdd} className="text-sm bg-blue-700 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-blue-800 transition-colors">
+        <button onClick={startAdd} className="text-sm bg-navy-800 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-navy-900 transition-colors">
           + 추가
         </button>
       </div>
@@ -197,7 +200,7 @@ export default function FeesPage() {
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
           <p className="text-xs text-gray-500 mb-1">연간 예상</p>
-          <p className="text-xl font-bold text-blue-700">{formatAmount(yearlyTotal)}</p>
+          <p className="text-xl font-bold text-navy-900">{formatAmount(yearlyTotal)}</p>
         </div>
       </div>
 
@@ -209,7 +212,7 @@ export default function FeesPage() {
             <div className="flex gap-1">
               {(['monthly', 'yearly'] as const).map(v => (
                 <button key={v} onClick={() => setChartView(v)}
-                  className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${chartView === v ? 'bg-blue-700 text-white' : 'text-gray-500 hover:bg-gray-100'}`}>
+                  className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${chartView === v ? 'bg-navy-800 text-white' : 'text-gray-500 hover:bg-gray-100'}`}>
                   {v === 'monthly' ? '월별' : '연간'}
                 </button>
               ))}
@@ -225,7 +228,7 @@ export default function FeesPage() {
                   <Tooltip formatter={(v) => formatAmount(Number(v))} />
                   <Bar dataKey="금액" radius={[4,4,0,0]}>
                     {monthlyChartData.map((_, i) => (
-                      <Cell key={i} fill={i === new Date().getMonth() ? '#2563eb' : '#e2e8f0'} />
+                      <Cell key={i} fill={i === new Date().getMonth() ? '#1e293b' : '#e2e8f0'} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -250,7 +253,7 @@ export default function FeesPage() {
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => v === 0 ? '' : `${(v/10000).toFixed(0)}만`} />
                 <Tooltip formatter={(v) => formatAmount(Number(v))} />
-                <Bar dataKey="금액" fill="#2563eb" radius={[4,4,0,0]} />
+                <Bar dataKey="금액" fill="#1e293b" radius={[4,4,0,0]} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -260,11 +263,11 @@ export default function FeesPage() {
       {/* 자녀 필터 */}
       {children.length > 0 && (
         <div className="flex gap-2 flex-wrap">
-          <button onClick={() => setFilterChild('all')} className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${filterChild === 'all' ? 'bg-blue-700 text-white border-blue-700' : 'text-gray-600 border-gray-300 hover:border-blue-400'}`}>전체</button>
+          <button onClick={() => setFilterChild('all')} className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${filterChild === 'all' ? 'bg-navy-800 text-white border-navy-900' : 'text-gray-600 border-gray-300 hover:border-navy-400'}`}>전체</button>
           {children.map(c => (
-            <button key={c.id} onClick={() => setFilterChild(c.id)} className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${filterChild === c.id ? 'bg-blue-700 text-white border-blue-700' : 'text-gray-600 border-gray-300 hover:border-blue-400'}`}>{c.name}</button>
+            <button key={c.id} onClick={() => setFilterChild(c.id)} className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${filterChild === c.id ? 'bg-navy-800 text-white border-navy-900' : 'text-gray-600 border-gray-300 hover:border-navy-400'}`}>{c.name}</button>
           ))}
-          <button onClick={() => setFilterChild('none')} className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${filterChild === 'none' ? 'bg-blue-700 text-white border-blue-700' : 'text-gray-600 border-gray-300 hover:border-blue-400'}`}>미배정</button>
+          <button onClick={() => setFilterChild('none')} className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${filterChild === 'none' ? 'bg-navy-800 text-white border-navy-900' : 'text-gray-600 border-gray-300 hover:border-navy-400'}`}>미배정</button>
         </div>
       )}
 
@@ -273,7 +276,7 @@ export default function FeesPage() {
         {fees.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 p-8 text-center">
             <p className="text-sm text-gray-400">등록된 학원이 없어요.</p>
-            <button onClick={startAdd} className="mt-3 text-sm text-blue-600 font-medium hover:underline">+ 학원비 추가하기</button>
+            <button onClick={startAdd} className="mt-3 text-sm text-gold-600 font-medium hover:underline">+ 학원비 추가하기</button>
           </div>
         ) : (
           activeFees.map(fee => {
@@ -346,7 +349,7 @@ export default function FeesPage() {
             <div className="flex gap-2 pt-1">
               <button onClick={() => setShowForm(false)} className="flex-1 py-2.5 rounded-xl border border-gray-300 text-sm text-gray-600 hover:bg-gray-50 transition-colors">취소</button>
               <button onClick={handleSave} disabled={saving || !form.name.trim() || !form.amount}
-                className="flex-1 py-2.5 rounded-xl bg-blue-700 text-white text-sm font-medium hover:bg-blue-800 transition-colors disabled:opacity-50">
+                className="flex-1 py-2.5 rounded-xl bg-navy-800 text-white text-sm font-medium hover:bg-navy-900 transition-colors disabled:opacity-50">
                 {saving ? '저장 중...' : '저장'}
               </button>
             </div>

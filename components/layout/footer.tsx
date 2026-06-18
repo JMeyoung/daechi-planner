@@ -23,9 +23,10 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <p className="mt-8 text-xs text-gray-400 text-center md:text-left">
-          © 2026 대치 플래너. All rights reserved.
-        </p>
+        <div className="mt-8 text-xs text-gray-400 text-center md:text-left space-y-1">
+          <p>© 2026 대치 플래너. All rights reserved.</p>
+          <p>문의: <a href="mailto:hanultari11@naver.com" className="hover:text-gray-600 underline">hanultari11@naver.com</a></p>
+        </div>
       </div>
     </footer>
   )

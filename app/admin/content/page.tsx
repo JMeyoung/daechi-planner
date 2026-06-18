@@ -69,7 +69,7 @@ export default async function AdminContentPage() {
                   </td>
                   <td className="px-4 py-3">
                     <Badge variant={item.is_premium ? 'orange' : 'gray'}>
-                      {item.is_premium ? '프리미엄' : '무료'}
+                      {item.is_premium ? '스탠다드' : '무료'}
                     </Badge>
                   </td>
                   <td className="px-4 py-3 text-right">

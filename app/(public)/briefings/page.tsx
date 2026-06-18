@@ -56,7 +56,7 @@ export default async function BriefingsPage({
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
       {/* Page header */}
-      <div className="mb-8 pb-6 border-b border-surface-border">
+      <div className="mb-8 pb-6 border-b border-gray-200">
         <p className="section-eyebrow mb-2">대치동 에디터 픽</p>
         <div className="flex items-end justify-between gap-4">
           <div>
@@ -81,15 +81,15 @@ export default async function BriefingsPage({
             name="q"
             defaultValue={q ?? ''}
             placeholder="제목·내용 검색"
-            className="w-full bg-surface-50 border border-surface-border rounded-2xl pl-4 pr-12 py-3 text-sm
-                       focus:outline-none focus:border-azure-400 focus:ring-2 focus:ring-azure-100
+            className="w-full bg-gray-50 border border-gray-200 rounded-2xl pl-4 pr-12 py-3 text-sm
+                       focus:outline-none focus:border-navy-400 focus:ring-2 focus:ring-navy-100
                        transition-all placeholder:text-gray-400"
           />
           <button
             type="submit"
             aria-label="검색"
             className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center
-                       rounded-xl bg-azure-600 text-white shadow-sm hover:shadow-cta transition-all"
+                       rounded-xl bg-navy-800 text-white shadow-sm hover:bg-navy-900 transition-all"
           >
             <svg viewBox="0 0 24 24" fill="none" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -112,8 +112,8 @@ export default async function BriefingsPage({
               href={qs ? `/briefings?${qs}` : '/briefings'}
               className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-150 ${
                 isActive
-                  ? 'bg-azure-600 text-white border-azure-600 shadow-[0_2px_8px_rgba(37,99,235,0.3)]'
-                  : 'bg-surface-50 text-gray-600 border-surface-border hover:border-azure-300 hover:text-azure-700'
+                  ? 'bg-navy-900 text-white border-navy-900 shadow-[0_2px_8px_rgba(15,23,42,0.3)]'
+                  : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-navy-300 hover:text-navy-700'
               }`}
             >
               {cat.label}
@@ -125,7 +125,7 @@ export default async function BriefingsPage({
       {/* Content grid */}
       {items.length === 0 ? (
         <div className="text-center py-20">
-          <div className="w-12 h-12 rounded-2xl bg-surface-100 flex items-center justify-center mx-auto mb-4">
+          <div className="w-12 h-12 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-6 h-6 text-gray-400">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
             </svg>
@@ -134,7 +134,7 @@ export default async function BriefingsPage({
             {search ? `"${search}"에 대한 결과가 없습니다` : '콘텐츠가 없습니다'}
           </p>
           {search && (
-            <a href="/briefings" className="text-sm text-azure-600 hover:underline font-medium">전체 보기</a>
+            <a href="/briefings" className="text-sm text-gold-600 hover:underline font-medium">전체 보기</a>
           )}
         </div>
       ) : (

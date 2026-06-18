@@ -1,11 +1,12 @@
-type BadgeVariant = 'blue' | 'green' | 'orange' | 'gray' | 'red'
+type BadgeVariant = 'blue' | 'green' | 'orange' | 'gray' | 'red' | 'gold'
 
 const VARIANT_CLASSES: Record<BadgeVariant, string> = {
-  blue:   'bg-azure-50 text-azure-700',
+  blue:   'bg-navy-50 text-navy-700',
   green:  'bg-green-50 text-green-700',
-  orange: 'bg-orange-50 text-orange-600',
-  gray:   'bg-surface-100 text-gray-500',
+  orange: 'bg-gold-100 text-gold-700',
+  gray:   'bg-gray-100 text-gray-500',
   red:    'bg-red-50 text-red-600',
+  gold:   'bg-gold-100 text-gold-700',
 }
 
 const CATEGORY_VARIANT: Record<string, BadgeVariant> = {

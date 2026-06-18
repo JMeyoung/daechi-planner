@@ -3,17 +3,17 @@
 export const CHILD_COLORS = ['blue', 'violet', 'emerald', 'orange', 'pink'] as const
 
 export const DOT_COLOR: Record<string, string> = {
-  blue:    'bg-blue-400',
-  violet:  'bg-violet-400',
-  emerald: 'bg-emerald-400',
-  orange:  'bg-orange-400',
-  pink:    'bg-pink-400',
+  blue:    'bg-navy-600',
+  orange:  'bg-gold-500',
+  emerald: 'bg-emerald-700',
+  pink:    'bg-rose-800',
+  violet:  'bg-stone-500',
 }
 
 export const BADGE_COLOR: Record<string, string> = {
-  blue:    'bg-blue-100 text-blue-700 border-blue-200',
-  violet:  'bg-violet-100 text-violet-700 border-violet-200',
-  emerald: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  orange:  'bg-orange-100 text-orange-700 border-orange-200',
-  pink:    'bg-pink-100 text-pink-700 border-pink-200',
+  blue:    'bg-navy-50 text-navy-800 border-navy-200',
+  orange:  'bg-gold-50 text-gold-800 border-gold-200',
+  emerald: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+  pink:    'bg-rose-50 text-rose-800 border-rose-200',
+  violet:  'bg-stone-50 text-stone-800 border-stone-200',
 }

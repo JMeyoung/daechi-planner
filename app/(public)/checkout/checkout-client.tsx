@@ -85,7 +85,7 @@ export default function CheckoutClient({ userId, plan }: Props) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 text-center">
         <p className="text-sm text-red-500 font-medium mb-3">결제 창을 여는 데 실패했습니다.</p>
-        <Link href="/pricing" className="text-sm text-blue-600 underline">요금제 페이지로 돌아가기</Link>
+        <Link href="/pricing" className="text-sm text-gold-600 underline">요금제 페이지로 돌아가기</Link>
       </div>
     )
   }
@@ -100,7 +100,7 @@ export default function CheckoutClient({ userId, plan }: Props) {
             <div>
               <p className="text-xs text-gray-500 mb-1">선택한 플랜</p>
               <p className="text-lg font-bold text-gray-900">{planInfo.label}</p>
-              <p className="text-2xl font-bold text-blue-700 mt-1">
+              <p className="text-2xl font-bold text-navy-900 mt-1">
                 ₩{finalAmount.toLocaleString('ko-KR')}
                 <span className="text-sm font-normal text-gray-400">/{planInfo.interval === 'month' ? '월' : '년'}</span>
               </p>
@@ -120,7 +120,7 @@ export default function CheckoutClient({ userId, plan }: Props) {
                   onChange={e => { setCouponCode(e.target.value.toUpperCase()); setCoupon(null) }}
                   onKeyDown={handleKeyDown}
                   placeholder="쿠폰 코드 입력"
-                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400"
                 />
                 <button
                   onClick={validateCoupon}
@@ -139,7 +139,7 @@ export default function CheckoutClient({ userId, plan }: Props) {
 
             <button
               onClick={launch}
-              className="w-full bg-blue-700 text-white py-3 rounded-xl text-sm font-semibold hover:bg-blue-800 transition-colors"
+              className="w-full bg-navy-800 text-white py-3 rounded-xl text-sm font-semibold hover:bg-navy-900 transition-colors"
             >
               카드 등록 후 결제하기
             </button>
@@ -152,7 +152,7 @@ export default function CheckoutClient({ userId, plan }: Props) {
 
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 text-center">
-      <div className="w-10 h-10 border-2 border-azure-200 border-t-azure-600 rounded-full animate-spin mb-5" />
+      <div className="w-10 h-10 border-2 border-navy-200 border-t-navy-800 rounded-full animate-spin mb-5" />
       <p className="text-sm text-gray-500 font-medium">결제 페이지로 이동 중...</p>
     </div>
   )

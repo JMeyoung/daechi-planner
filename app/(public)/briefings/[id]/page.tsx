@@ -57,7 +57,8 @@ export default async function BriefingDetailPage({ params }: Props) {
     isBookmarked = !!bookmarkRes.data
   }
 
-  const isLocked = content.is_premium && !isPremium
+  // 오픈 베타 기간 동안 스탠다드 잠금 해제 (임시)
+  const isLocked = false // content.is_premium && !isPremium
   const toggleAction = toggleBookmark.bind(null, id, isBookmarked)
 
   return (
@@ -65,7 +66,7 @@ export default async function BriefingDetailPage({ params }: Props) {
       {/* Back link */}
       <Link
         href="/briefings"
-        className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-azure-600 mb-8 transition-colors font-medium animate-fade-in"
+        className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-navy-700 mb-8 transition-colors font-medium animate-fade-in"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
           <path d="M19 12H5M12 5l-7 7 7 7" />
@@ -77,7 +78,7 @@ export default async function BriefingDetailPage({ params }: Props) {
         {/* Meta */}
         <div className="flex items-center gap-2 mb-4 animate-fade-up">
           <Badge category={content.category} />
-          {content.is_premium && <Badge variant="orange">프리미엄</Badge>}
+          {content.is_premium && <Badge variant="orange">스탠다드</Badge>}
         </div>
 
         {/* Title */}
@@ -97,8 +98,15 @@ export default async function BriefingDetailPage({ params }: Props) {
           <p className="text-sm text-gray-400 mb-7 animate-fade-up-1">{formatDate(content.published_at)}</p>
         )}
 
+        {/* 오픈 베타 무료 제공 알림 (임시) */}
+        {content.is_premium && (
+          <div className="bg-gold-100 text-gold-700 text-sm px-4 py-3 rounded-xl mb-6 animate-fade-up-2 font-medium">
+            ✨ 오픈 베타 기념으로 스탠다드 콘텐츠를 무료로 제공하고 있습니다.
+          </div>
+        )}
+
         {/* Divider */}
-        <div className="border-t border-surface-border mb-7 animate-fade-up-2" />
+        <div className="border-t border-gray-200 mb-7 animate-fade-up-2" />
 
         {/* Bookmark */}
         {user && (
@@ -107,8 +115,8 @@ export default async function BriefingDetailPage({ params }: Props) {
               type="submit"
               className={`inline-flex items-center gap-2 text-sm px-4 py-2 rounded-full border font-medium transition-all duration-200 ${
                 isBookmarked
-                  ? 'bg-azure-50 border-azure-200 text-azure-700 hover:bg-azure-100'
-                  : 'bg-white border-surface-border text-gray-500 hover:border-azure-300 hover:text-azure-700'
+                  ? 'bg-gold-100 border-gold-200 text-gold-700 hover:bg-gold-50'
+                  : 'bg-white border-gray-200 text-gray-500 hover:border-navy-300 hover:text-navy-700'
               }`}
             >
               <svg viewBox="0 0 24 24" fill={isBookmarked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -121,18 +129,18 @@ export default async function BriefingDetailPage({ params }: Props) {
 
         {/* Content or paywall */}
         {isLocked ? (
-          <div className="rounded-2xl overflow-hidden border border-surface-border animate-fade-up-2">
+          <div className="rounded-2xl overflow-hidden border border-gray-200 animate-fade-up-2">
             {/* Blurred preview */}
             <div className="h-24 bg-gradient-to-b from-transparent to-white relative overflow-hidden">
               <div className="absolute inset-0 p-5 blur-sm opacity-40 pointer-events-none select-none text-sm text-gray-600 leading-relaxed">
-                이 콘텐츠는 프리미엄 멤버에게만 공개됩니다. 지금 구독하시면 대치동 학원 심층 분석과 입시 트렌드 리포트를 포함한 모든 프리미엄 콘텐츠를 이용하실 수 있습니다.
+                이 콘텐츠는 스탠다드 멤버에게만 공개됩니다. 지금 구독하시면 대치동 학원 심층 분석과 입시 트렌드 리포트를 포함한 모든 스탠다드 콘텐츠를 이용하실 수 있습니다.
               </div>
             </div>
             {/* Paywall CTA */}
-            <div className="bg-surface-50 px-8 py-8 text-center border-t border-surface-border">
-              <p className="font-semibold text-gray-900 mb-1">프리미엄 전용 콘텐츠입니다</p>
+            <div className="bg-gray-50 px-8 py-8 text-center border-t border-gray-200">
+              <p className="font-semibold text-gray-900 mb-1">스탠다드 전용 콘텐츠입니다</p>
               <p className="text-sm text-gray-500 mb-6">
-                프리미엄 멤버십을 구독하면 모든 콘텐츠를 이용할 수 있습니다.
+                스탠다드 멤버십을 구독하면 모든 콘텐츠를 이용할 수 있습니다.
               </p>
               <div className="flex gap-3 justify-center">
                 {!user && (
@@ -144,7 +152,7 @@ export default async function BriefingDetailPage({ params }: Props) {
                   </Link>
                 )}
                 <Link href="/pricing" className="btn-primary text-sm py-2.5 px-6">
-                  프리미엄 시작하기
+                  스탠다드 시작하기
                 </Link>
               </div>
             </div>
