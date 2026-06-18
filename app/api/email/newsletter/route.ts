@@ -1,19 +1,27 @@
 import { NextResponse } from 'next/server'
-import { createServiceClient } from '@/lib/supabase/server'
+import { z } from 'zod'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { getResend, FROM } from '@/lib/resend'
 import { newsletterHtml } from '@/lib/email-templates'
 
-export async function POST(request: Request) {
-  const supabase = createServiceClient()
+const newsletterSchema = z.object({
+  subject: z.string().min(1).max(200),
+  body: z.string().min(1).max(50000),
+})
 
-  // Admin check
-  const { data: { user } } = await supabase.auth.getUser()
+export async function POST(request: Request) {
+  // Use anon client for user identity check, service client for data access
+  const authClient = await createClient()
+  const { data: { user } } = await authClient.auth.getUser()
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+
+  const supabase = createServiceClient()
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
   if (profile?.role !== 'admin') return NextResponse.json({ error: 'forbidden' }, { status: 403 })
 
-  const { subject, body } = await request.json() as { subject: string; body: string }
-  if (!subject?.trim() || !body?.trim()) return NextResponse.json({ error: 'subject and body required' }, { status: 400 })
+  const parsed = newsletterSchema.safeParse(await request.json())
+  if (!parsed.success) return NextResponse.json({ error: 'subject and body required' }, { status: 400 })
+  const { subject, body } = parsed.data
 
   // Get all premium active subscribers' emails
   const { data: subs } = await supabase
