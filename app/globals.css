@@ -111,6 +111,12 @@
     @apply bg-navy-900 rounded-2xl border border-navy-700/50
            transition-all duration-200 ease-out;
   }
+
+  /* ── Static panel (forms, tables, admin) ── */
+  /* card-lift와 달리 hover 효과 없음 — 폼/테이블/정적 컨테이너용 */
+  .card-panel {
+    @apply bg-white rounded-xl border border-surface-border;
+  }
 }
 
 @layer utilities {

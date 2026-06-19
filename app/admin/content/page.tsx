@@ -28,7 +28,7 @@ export default async function AdminContentPage() {
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl border border-surface-border overflow-hidden">
+      <div className="card-panel overflow-hidden">
         {items.length === 0 ? (
           <div className="p-12 text-center text-gray-400 text-sm">
             콘텐츠가 없습니다.{' '}

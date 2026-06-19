@@ -49,7 +49,7 @@ export default function NewContentPage() {
         <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">{error}</div>
       )}
 
-      <div className="bg-white rounded-xl border border-surface-border p-6 space-y-5">
+      <div className="card-panel p-6 space-y-5">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">제목 *</label>
           <input

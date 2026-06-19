@@ -64,7 +64,7 @@ export default function AdminCouponsPage() {
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-xl border border-surface-border p-5 space-y-4">
+        <div className="card-panel p-5 space-y-4">
           <h2 className="font-semibold text-gray-900">새 쿠폰</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             <div>
@@ -105,7 +105,7 @@ export default function AdminCouponsPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-surface-border overflow-hidden">
+      <div className="card-panel overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>

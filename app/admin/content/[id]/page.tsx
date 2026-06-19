@@ -105,7 +105,7 @@ export default function ContentEditorPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-surface-border p-6 space-y-5">
+      <div className="card-panel p-6 space-y-5">
         {/* Title */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">제목 *</label>

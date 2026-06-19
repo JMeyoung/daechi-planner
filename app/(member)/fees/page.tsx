@@ -1,13 +1,16 @@
 'use client'
 
 import { useEffect, useState, useMemo } from 'react'
+import dynamic from 'next/dynamic'
 import { createClient } from '@/lib/supabase/client'
 import { CHILD_COLORS, BADGE_COLOR, DOT_COLOR } from '@/lib/child-colors'
 import type { AcademyFee, ChildProfile } from '@/types'
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  Cell, PieChart, Pie, Legend,
-} from 'recharts'
+
+// recharts(~80KB)는 차트가 보일 때만 로드 — 초기 번들에서 제외
+const FeesCharts = dynamic(() => import('./fees-charts'), {
+  ssr: false,
+  loading: () => <div className="bg-white rounded-xl border border-surface-border p-4 h-48 animate-pulse" />,
+})
 
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
 
@@ -199,70 +202,25 @@ export default function FeesPage() {
 
       {/* 요약 카드 */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="bg-white rounded-xl border border-surface-border p-4">
           <p className="text-xs text-gray-500 mb-1">월 총 학원비</p>
           <p className="text-xl font-bold text-gray-900">{formatAmount(monthlyTotal)}</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
+        <div className="bg-white rounded-xl border border-surface-border p-4">
           <p className="text-xs text-gray-500 mb-1">연간 예상</p>
           <p className="text-xl font-bold text-navy-900">{formatAmount(yearlyTotal)}</p>
         </div>
       </div>
 
-      {/* 차트 */}
+      {/* 차트 (recharts 지연 로딩) */}
       {monthlyTotal > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-semibold text-gray-900">지출 현황</p>
-            <div className="flex gap-1">
-              {(['monthly', 'yearly'] as const).map(v => (
-                <button key={v} onClick={() => setChartView(v)}
-                  className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${chartView === v ? 'bg-navy-800 text-white' : 'text-gray-500 hover:bg-gray-100'}`}>
-                  {v === 'monthly' ? '월별' : '연간'}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {chartView === 'monthly' ? (
-            <>
-              <ResponsiveContainer width="100%" height={160}>
-                <BarChart data={monthlyChartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-                  <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => v === 0 ? '' : `${(v/10000).toFixed(0)}만`} />
-                  <Tooltip formatter={(v) => formatAmount(Number(v))} />
-                  <Bar dataKey="금액" radius={[4,4,0,0]}>
-                    {monthlyChartData.map((_, i) => (
-                      <Cell key={i} fill={i === new Date().getMonth() ? '#1e293b' : '#e2e8f0'} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-              {/* 자녀별 파이 */}
-              {pieData.length > 1 && (
-                <div className="mt-4">
-                  <ResponsiveContainer width="100%" height={160}>
-                    <PieChart>
-                      <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60} label={({ name, percent }) => `${name} ${((percent ?? 0)*100).toFixed(0)}%`} labelLine={false}>
-                        {pieData.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-                      </Pie>
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-            </>
-          ) : (
-            <ResponsiveContainer width="100%" height={180}>
-              <BarChart data={yearlyChartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => v === 0 ? '' : `${(v/10000).toFixed(0)}만`} />
-                <Tooltip formatter={(v) => formatAmount(Number(v))} />
-                <Bar dataKey="금액" fill="#1e293b" radius={[4,4,0,0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
-        </div>
+        <FeesCharts
+          monthlyChartData={monthlyChartData}
+          yearlyChartData={yearlyChartData}
+          pieData={pieData}
+          chartView={chartView}
+          setChartView={setChartView}
+        />
       )}
 
       {/* 자녀 필터 */}

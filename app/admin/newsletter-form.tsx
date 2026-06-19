@@ -30,7 +30,7 @@ export default function NewsletterForm({ premiumCount }: { premiumCount: number 
   }
 
   return (
-    <div className="bg-white rounded-xl border border-surface-border p-5">
+    <div className="card-panel p-5">
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-semibold text-gray-900">뉴스레터 발송</h2>
         <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">스탠다드 {premiumCount}명</span>

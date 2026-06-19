@@ -39,7 +39,7 @@ export default async function AdminDashboardPage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         {stats.map(stat => (
-          <div key={stat.label} className="bg-white rounded-xl border border-surface-border p-5 text-center">
+          <div key={stat.label} className="card-panel p-5 text-center">
             <p className="text-3xl font-bold text-navy-700">{stat.value}</p>
             <p className="text-sm text-gray-500 mt-1">{stat.label}</p>
           </div>
@@ -50,7 +50,7 @@ export default async function AdminDashboardPage() {
       <NewsletterForm premiumCount={premiumRes.count ?? 0} />
 
       {/* Quick links */}
-      <div className="bg-white rounded-xl border border-surface-border p-5">
+      <div className="card-panel p-5">
         <h2 className="font-semibold text-gray-900 mb-3">빠른 액션</h2>
         <div className="grid sm:grid-cols-3 gap-3">
           <Link
