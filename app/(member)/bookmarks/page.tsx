@@ -1,15 +1,14 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, getUser } from '@/lib/supabase/server'
 import ContentCard from '@/components/content/content-card'
 import type { ContentSummary } from '@/types'
 
 export const metadata: Metadata = { title: '북마크' }
 
 export default async function BookmarksPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const [user, supabase] = await Promise.all([getUser(), createClient()])
   if (!user) redirect('/login')
 
   const { data } = await supabase
@@ -37,8 +36,8 @@ export default async function BookmarksPage() {
       </div>
 
       {items.length === 0 ? (
-        <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center">
-          <p className="text-gray-400 text-sm mb-3">저장한 콘텐츠가 없습니다.</p>
+        <div className="bg-white border border-surface-border rounded-2xl p-12 text-center">
+          <p className="text-gray-500 text-sm mb-3">저장한 콘텐츠가 없습니다.</p>
           <Link href="/briefings" className="text-sm text-gold-600 hover:underline">
             브리프 둘러보기 →
           </Link>

@@ -11,7 +11,7 @@ create table public.profiles (
   email         text not null,
   full_name     text,
   role          text not null default 'member' check (role in ('member', 'admin')),
-  child_grade   smallint check (child_grade between 1 and 3), -- 1=중1, 2=중2, 3=중3
+  child_grade   smallint check (child_grade between 1 and 6), -- 1~3=중1~3, 4~6=고1~3 (see 0007_expand_grade.sql)
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now()
 );
@@ -60,8 +60,8 @@ create table public.bookmarks (
 create table public.subscriptions (
   id                     uuid primary key default uuid_generate_v4(),
   user_id                uuid not null references public.profiles(id) on delete cascade unique,
-  stripe_customer_id     text unique,
-  stripe_subscription_id text unique,
+  stripe_customer_id     text unique, -- reserved for future Stripe integration (currently Toss only — see 0006_toss_billing.sql)
+  stripe_subscription_id text unique, -- reserved for future Stripe integration
   plan                   text not null default 'free' check (plan in ('free', 'premium')),
   status                 text not null default 'active'
                            check (status in ('active', 'canceled', 'past_due', 'trialing')),

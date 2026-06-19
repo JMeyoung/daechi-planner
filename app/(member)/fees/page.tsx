@@ -184,12 +184,12 @@ export default function FeesPage() {
 
       {/* 납부일 알림 */}
       {upcomingFees.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-1.5">
-          <p className="text-xs font-semibold text-amber-700 mb-2">납부일 임박</p>
+        <div className="bg-gold-50 border border-gold-200 rounded-xl p-4 space-y-1.5">
+          <p className="text-xs font-semibold text-gold-700 mb-2">납부일 임박</p>
           {upcomingFees.map(f => (
             <div key={f.id} className="flex items-center justify-between text-sm">
               <span className="text-gray-700">{f.name}</span>
-              <span className={`font-semibold ${f.dday === 0 ? 'text-red-600' : 'text-amber-600'}`}>
+              <span className={`font-semibold ${f.dday === 0 ? 'text-red-600' : 'text-gold-700'}`}>
                 {f.dday === 0 ? '오늘' : `D-${f.dday}`} · {formatAmount(f.amount)}
               </span>
             </div>
@@ -298,7 +298,7 @@ export default function FeesPage() {
                         <span className={`text-xs px-1.5 py-0.5 rounded border font-medium ${BADGE_COLOR[child.color]}`}>{child.name}</span>
                       )}
                       {dday !== null && dday <= 3 && (
-                        <span className={`text-xs font-semibold ${dday === 0 ? 'text-red-600' : 'text-amber-600'}`}>{dday === 0 ? '오늘 납부' : `D-${dday}`}</span>
+                        <span className={`text-xs font-semibold ${dday === 0 ? 'text-red-600' : 'text-gold-700'}`}>{dday === 0 ? '오늘 납부' : `D-${dday}`}</span>
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">

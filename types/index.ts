@@ -1,7 +1,7 @@
 export type UserRole = 'member' | 'admin'
 export type ContentCategory = 'briefing' | 'tip' | 'announcement' | 'event'
 export type SubscriptionPlan = 'free' | 'premium'
-export type SubscriptionStatus = 'active' | 'canceled' | 'past_due'
+export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing'
 
 export type Profile = {
   id: string
