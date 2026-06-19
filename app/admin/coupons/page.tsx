@@ -52,19 +52,19 @@ export default function AdminCouponsPage() {
     setCoupons(prev => prev.filter(c => c.id !== id))
   }
 
-  const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+  const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400'
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-900">쿠폰 관리</h1>
-        <button onClick={() => setShowForm(v => !v)} className="bg-blue-700 text-white text-sm px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors">
+        <button onClick={() => setShowForm(v => !v)} className="bg-navy-800 text-white text-sm px-4 py-2 rounded-lg hover:bg-navy-900 transition-colors">
           + 쿠폰 생성
         </button>
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
+        <div className="bg-white rounded-xl border border-surface-border p-5 space-y-4">
           <h2 className="font-semibold text-gray-900">새 쿠폰</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             <div>
@@ -98,14 +98,14 @@ export default function AdminCouponsPage() {
           <div className="flex gap-2">
             <button onClick={() => setShowForm(false)} className="flex-1 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50">취소</button>
             <button onClick={handleSave} disabled={saving || !form.code.trim() || !form.value}
-              className="flex-1 py-2 bg-blue-700 text-white rounded-lg text-sm font-medium hover:bg-blue-800 disabled:opacity-50">
+              className="flex-1 py-2 bg-navy-800 text-white rounded-lg text-sm font-medium hover:bg-navy-900 disabled:opacity-50">
               {saving ? '저장 중...' : '생성'}
             </button>
           </div>
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-surface-border overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>

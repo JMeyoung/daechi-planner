@@ -26,9 +26,11 @@ function formatAmount(n: number) {
 function getDday(paymentDay: number | null): number | null {
   if (!paymentDay) return null
   const today = new Date()
-  const thisMonth = new Date(today.getFullYear(), today.getMonth(), paymentDay)
-  if (thisMonth < today) thisMonth.setMonth(thisMonth.getMonth() + 1)
-  return Math.ceil((thisMonth.getTime() - today.setHours(0,0,0,0)) / 86400000)
+  today.setHours(0, 0, 0, 0)
+  const target = new Date(today.getFullYear(), today.getMonth(), paymentDay)
+  // 납부일이 오늘이면 D-0, 이미 지났으면 다음 달로
+  if (target < today) target.setMonth(target.getMonth() + 1)
+  return Math.round((target.getTime() - today.getTime()) / 86400000)
 }
 
 export default function FeesPage() {
@@ -50,15 +52,18 @@ export default function FeesPage() {
   }, [])
 
   async function load() {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-    const [feesRes, childrenRes] = await Promise.all([
-      supabase.from('academy_fees').select('*').eq('user_id', user.id).order('created_at'),
-      supabase.from('child_profiles').select('*').eq('user_id', user.id).order('sort_order'),
-    ])
-    if (feesRes.data) setFees(feesRes.data as AcademyFee[])
-    if (childrenRes.data) setChildren(childrenRes.data as ChildProfile[])
-    setLoading(false)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const [feesRes, childrenRes] = await Promise.all([
+        supabase.from('academy_fees').select('*').eq('user_id', user.id).order('created_at'),
+        supabase.from('child_profiles').select('*').eq('user_id', user.id).order('sort_order'),
+      ])
+      if (feesRes.data) setFees(feesRes.data as AcademyFee[])
+      if (childrenRes.data) setChildren(childrenRes.data as ChildProfile[])
+    } finally {
+      setLoading(false)
+    }
   }
 
   const activeFees = useMemo(() =>
@@ -77,11 +82,11 @@ export default function FeesPage() {
 
   // 월별 차트 데이터 (현재 월 기준 ±5개월)
   const monthlyChartData = useMemo(() => {
-    const today = new Date()
+    const currentMonth = new Date().getMonth()
     return MONTHS.map((label, i) => ({
       name: label,
-      금액: i === today.getMonth() ? monthlyTotal : 0,
-    })).map((d, i) => i === new Date().getMonth() ? { ...d, 금액: monthlyTotal } : d)
+      금액: i === currentMonth ? monthlyTotal : 0,
+    }))
   }, [monthlyTotal])
 
   // 연간 차트 데이터 (월별 동일 금액)

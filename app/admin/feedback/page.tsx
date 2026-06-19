@@ -29,9 +29,9 @@ export default async function AdminFeedbackPage() {
           <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">{waitlist.length}명</span>
         </div>
         {waitlist.length === 0 ? (
-          <p className="text-sm text-gray-400 bg-white border border-gray-200 rounded-xl p-5">아직 등록된 대기자가 없습니다.</p>
+          <p className="text-sm text-gray-400 bg-white border border-surface-border rounded-xl p-5">아직 등록된 대기자가 없습니다.</p>
         ) : (
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="bg-white border border-surface-border rounded-xl overflow-hidden">
             {waitlist.map(w => (
               <div key={w.id} className="flex items-center justify-between px-4 py-3 border-b border-gray-100 last:border-0">
                 <span className="text-sm text-gray-800">{w.email}</span>
@@ -49,11 +49,11 @@ export default async function AdminFeedbackPage() {
           <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">{feedback.length}건</span>
         </div>
         {feedback.length === 0 ? (
-          <p className="text-sm text-gray-400 bg-white border border-gray-200 rounded-xl p-5">아직 받은 의견이 없습니다.</p>
+          <p className="text-sm text-gray-400 bg-white border border-surface-border rounded-xl p-5">아직 받은 의견이 없습니다.</p>
         ) : (
           <div className="space-y-3">
             {feedback.map(f => (
-              <div key={f.id} className="bg-white border border-gray-200 rounded-xl p-4">
+              <div key={f.id} className="bg-white border border-surface-border rounded-xl p-4">
                 <p className="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">{f.message}</p>
                 <div className="flex items-center gap-3 mt-3 text-xs text-gray-400">
                   <span>{fmt(f.created_at)}</span>

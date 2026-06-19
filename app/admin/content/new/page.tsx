@@ -49,14 +49,14 @@ export default function NewContentPage() {
         <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">{error}</div>
       )}
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
+      <div className="bg-white rounded-xl border border-surface-border p-6 space-y-5">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">제목 *</label>
           <input
             type="text"
             value={form.title}
             onChange={e => set('title', e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400"
             placeholder="제목을 입력하세요"
             autoFocus
           />
@@ -67,7 +67,7 @@ export default function NewContentPage() {
             value={form.summary}
             onChange={e => set('summary', e.target.value)}
             rows={2}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400 resize-none"
             placeholder="목록에서 표시될 한두 줄 요약"
           />
         </div>
@@ -77,7 +77,7 @@ export default function NewContentPage() {
             value={form.body}
             onChange={e => set('body', e.target.value)}
             rows={14}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400 font-mono"
             placeholder="본문을 입력하세요"
           />
         </div>
@@ -87,7 +87,7 @@ export default function NewContentPage() {
             <select
               value={form.category}
               onChange={e => set('category', e.target.value as ContentItem['category'])}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400"
             >
               <option value="briefing">브리프</option>
               <option value="tip">학습 팁</option>
@@ -101,7 +101,7 @@ export default function NewContentPage() {
                 type="checkbox"
                 checked={form.is_premium}
                 onChange={e => set('is_premium', e.target.checked)}
-                className="w-4 h-4 rounded border-gray-300 text-blue-700"
+                className="w-4 h-4 rounded border-gray-300 text-navy-800"
               />
               <span className="text-sm text-gray-700">스탠다드 콘텐츠</span>
             </label>

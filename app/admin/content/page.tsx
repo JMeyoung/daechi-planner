@@ -22,17 +22,17 @@ export default async function AdminContentPage() {
         <h1 className="text-xl font-bold text-gray-900">콘텐츠 관리</h1>
         <Link
           href="/admin/content/new"
-          className="bg-blue-700 text-white text-sm px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors"
+          className="bg-navy-800 text-white text-sm px-4 py-2 rounded-lg hover:bg-navy-900 transition-colors"
         >
           + 새 콘텐츠
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-surface-border overflow-hidden">
         {items.length === 0 ? (
           <div className="p-12 text-center text-gray-400 text-sm">
             콘텐츠가 없습니다.{' '}
-            <Link href="/admin/content/new" className="text-blue-700 hover:underline">
+            <Link href="/admin/content/new" className="text-navy-800 hover:underline">
               첫 콘텐츠를 작성하세요
             </Link>
           </div>
@@ -75,7 +75,7 @@ export default async function AdminContentPage() {
                   <td className="px-4 py-3 text-right">
                     <Link
                       href={`/admin/content/${item.id}`}
-                      className="text-xs text-blue-700 hover:underline"
+                      className="text-xs text-navy-800 hover:underline"
                     >
                       편집
                     </Link>

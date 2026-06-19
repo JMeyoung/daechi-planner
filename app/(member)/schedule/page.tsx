@@ -73,6 +73,7 @@ export default function SchedulePage() {
     ]).then(([eventsRes, childrenRes]) => {
       setEvents(eventsRes.data ?? [])
       setChildren((childrenRes.data ?? []) as ChildProfile[])
+    }).finally(() => {
       setLoading(false)
     })
   }, [])
