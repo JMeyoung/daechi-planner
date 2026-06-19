@@ -100,10 +100,10 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
         </div>
 
         {/* ── Premium plan ──────────────────────── */}
-        <div className="relative bg-azure-gradient rounded-2xl p-7 text-white shadow-[0_8px_32px_rgba(37,99,235,0.3)] animate-fade-up-2 md:scale-[1.02]">
+        <div className="relative bg-navy-gradient rounded-2xl p-7 text-white shadow-[0_8px_32px_rgba(37,99,235,0.3)] animate-fade-up-2 md:scale-[1.02]">
           {/* Recommended badge */}
           <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-            <span className="bg-white text-azure-700 text-xs font-bold px-3.5 py-1 rounded-full shadow-sm">
+            <span className="bg-white text-navy-800 text-xs font-bold px-3.5 py-1 rounded-full shadow-sm">
               ✦ 추천
             </span>
           </div>
@@ -141,7 +141,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
           {isPremium ? (
             <Link
               href="/settings"
-              className="block text-center w-full bg-white text-azure-700 font-bold py-3 rounded-full
+              className="block text-center w-full bg-white text-navy-800 font-bold py-3 rounded-full
                          shadow-cta hover:shadow-cta-hover hover:-translate-y-px
                          transition-all duration-200 text-sm"
             >
@@ -151,7 +151,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
             <>
               <Link
                 href="/checkout?plan=premium_monthly"
-                className="block text-center w-full bg-white text-azure-700 font-bold py-3 rounded-full
+                className="block text-center w-full bg-white text-navy-800 font-bold py-3 rounded-full
                            shadow-cta hover:shadow-cta-hover hover:-translate-y-px
                            transition-all duration-200 text-sm"
               >

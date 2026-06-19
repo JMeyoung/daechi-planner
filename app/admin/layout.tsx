@@ -26,7 +26,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link href="/" className="font-bold text-blue-700 text-sm">대치 플래너</Link>
+            <Link href="/" className="font-bold text-navy-800 text-sm">대치 플래너</Link>
             <span className="text-gray-300">|</span>
             <nav className="flex items-center gap-4">
               {ADMIN_NAV.map(item => (
@@ -40,7 +40,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               ))}
             </nav>
           </div>
-          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
+          <span className="text-xs bg-navy-50 text-navy-700 px-2 py-1 rounded-full font-medium">
             관리자
           </span>
         </div>

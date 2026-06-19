@@ -7,7 +7,7 @@ export default function CheckoutSuccessPage() {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 py-16 text-center animate-fade-up">
       {/* 체크 아이콘 */}
-      <div className="w-20 h-20 rounded-full bg-azure-gradient flex items-center justify-center shadow-cta mb-6">
+      <div className="w-20 h-20 rounded-full bg-navy-gradient flex items-center justify-center shadow-cta mb-6">
         <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
         </svg>

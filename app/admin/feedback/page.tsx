@@ -57,7 +57,7 @@ export default async function AdminFeedbackPage() {
                 <p className="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">{f.message}</p>
                 <div className="flex items-center gap-3 mt-3 text-xs text-gray-400">
                   <span>{fmt(f.created_at)}</span>
-                  {f.contact && <span className="text-azure-600">· {f.contact}</span>}
+                  {f.contact && <span className="text-navy-600">· {f.contact}</span>}
                 </div>
               </div>
             ))}
