@@ -62,7 +62,7 @@ export default function ContentCard({ item, showLock = true }: ContentCardProps)
       )}
 
       {item.published_at && (
-        <p className="text-xs text-gray-400">{formatDate(item.published_at)}</p>
+        <p className="text-xs text-gray-500">{formatDate(item.published_at)}</p>
       )}
     </Link>
   )

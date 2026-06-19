@@ -67,7 +67,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
                     : 'text-gray-500 hover:text-navy-900'
                   : pathname === link.href
                     ? 'text-white'
-                    : 'text-white/60 hover:text-white'
+                    : 'text-white/80 hover:text-white'
               }`}
             >
               {link.label}
@@ -90,7 +90,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
               <button
                 onClick={handleSignOut}
                 className={`text-sm transition-colors ${
-                  scrolled || !isHome ? 'text-gray-400 hover:text-gray-600' : 'text-white/40 hover:text-white/70'
+                  scrolled || !isHome ? 'text-gray-500 hover:text-gray-700' : 'text-white/70 hover:text-white'
                 }`}
               >
                 로그아웃

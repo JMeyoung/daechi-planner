@@ -50,7 +50,7 @@ export default async function BriefingsPage({
     query = query.or(`title.ilike.%${search}%,summary.ilike.%${search}%`)
   }
 
-  const { data } = await query
+  const { data } = await query.limit(60)
   const items = (data ?? []) as ContentSummary[]
 
   return (
@@ -82,7 +82,7 @@ export default async function BriefingsPage({
             defaultValue={q ?? ''}
             placeholder="제목·내용 검색"
             className="w-full bg-gray-50 border border-gray-200 rounded-2xl pl-4 pr-12 py-3 text-sm
-                       focus:outline-none focus:border-navy-400 focus:ring-2 focus:ring-navy-100
+                       focus:outline-none focus:border-navy-400 focus:ring-2 focus:ring-navy-300
                        transition-all placeholder:text-gray-400"
           />
           <button

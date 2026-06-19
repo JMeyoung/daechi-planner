@@ -82,7 +82,7 @@ export default async function HomePage() {
             교육 정보와 일정을<br />
             <span className="text-gold-400">한 곳에서</span> 관리하세요
           </h1>
-          <p className="text-white/50 text-base md:text-lg mb-10 leading-relaxed animate-fade-up-1">
+          <p className="text-white/70 text-base md:text-lg mb-10 leading-relaxed animate-fade-up-1">
             대치동 중학생 학부모들이 꼭 알아야 할 학원·입시 정보와<br className="hidden md:block" />
             자녀의 교육 일정을 스마트하게 관리할 수 있습니다.
           </p>
@@ -158,7 +158,7 @@ export default async function HomePage() {
           <h2 className="font-display text-xl font-bold text-white mb-3">
             지금 바로 대치 플래너를 시작하세요
           </h2>
-          <p className="text-white/40 text-sm mb-8">
+          <p className="text-white/70 text-sm mb-8">
             오픈 베타 기간 동안 모든 기능을 무료로 이용할 수 있습니다.
           </p>
           <Link href="/login?signup=1" className="btn-primary text-sm">
@@ -166,8 +166,8 @@ export default async function HomePage() {
           </Link>
 
           <div className="mt-12 pt-8 border-t border-white/10">
-            <p className="text-sm text-white/50 mb-1 font-medium">아직 가입은 망설여지시나요?</p>
-            <p className="text-xs text-white/30 mb-4">
+            <p className="text-sm text-white/80 mb-1 font-medium">아직 가입은 망설여지시나요?</p>
+            <p className="text-xs text-white/60 mb-4">
               이메일만 남겨주시면 새 소식과 업데이트를 가장 먼저 알려드릴게요.
             </p>
             <WaitlistForm source="landing" />

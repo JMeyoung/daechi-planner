@@ -68,8 +68,8 @@ export default function SchedulePage() {
   useEffect(() => {
     const supabase = createClient()
     Promise.all([
-      supabase.from('schedule_events').select('*'),
-      supabase.from('child_profiles').select('*').order('sort_order'),
+      supabase.from('schedule_events').select('id, title, category, subject, location, start_at, end_at, is_recurring, recur_days, child_id, user_id, memo, created_at, updated_at'),
+      supabase.from('child_profiles').select('id, name, color, grade, sort_order').order('sort_order'),
     ]).then(([eventsRes, childrenRes]) => {
       setEvents(eventsRes.data ?? [])
       setChildren((childrenRes.data ?? []) as ChildProfile[])

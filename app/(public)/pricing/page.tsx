@@ -112,14 +112,14 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
           <div className="absolute -right-6 -top-6 w-28 h-28 rounded-full bg-white/10 pointer-events-none" aria-hidden="true" />
 
           <div className="mb-6 relative">
-            <p className="text-sm font-semibold text-white/60 mb-2 uppercase tracking-wide">스탠다드</p>
+            <p className="text-sm font-semibold text-white/75 mb-2 uppercase tracking-wide">스탠다드</p>
             <div className="flex items-baseline gap-2.5">
               <p className="font-display text-4xl font-bold text-white">
-                ₩9,900<span className="text-base font-normal text-white/60"> /월</span>
+                ₩9,900<span className="text-base font-normal text-white/75"> /월</span>
               </p>
-              <span className="text-xs text-white/50 line-through">₩11,900</span>
+              <span className="text-xs text-white/70 line-through">₩11,900</span>
             </div>
-            <p className="text-xs text-white/60 mt-1.5">연간 구독 시 ₩99,000 (17% 할인)</p>
+            <p className="text-xs text-white/75 mt-1.5">연간 구독 시 ₩99,000 (17% 할인)</p>
           </div>
 
           <ul className="space-y-3 mb-8 relative">
@@ -167,7 +167,7 @@ export default async function PricingPage({ searchParams }: { searchParams: Prom
             </>
           )}
 
-          <p className="text-xs text-white/50 text-center mt-3">
+          <p className="text-xs text-white/70 text-center mt-3">
             언제든지 해지 가능합니다.
           </p>
         </div>

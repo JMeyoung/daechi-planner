@@ -109,7 +109,7 @@ export default async function DashboardPage() {
         {/* Gold accent line */}
         <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold-400/20 to-transparent" aria-hidden="true" />
 
-        <p className="text-white/50 text-sm mb-0.5">안녕하세요</p>
+        <p className="text-white/70 text-sm mb-0.5">안녕하세요</p>
         <h1 className="font-display text-xl font-bold text-white">
           {profile?.full_name ?? user.email?.split('@')[0]} 님
         </h1>
