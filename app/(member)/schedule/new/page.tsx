@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { DOT_COLOR } from '@/lib/child-colors'
-import type { ChildProfile } from '@/types'
+import type { ChildProfile, AcademyFee } from '@/types'
 
 const DAYS_KO = ['일', '월', '화', '수', '목', '금', '토']
 const CATEGORIES = [
@@ -28,13 +28,19 @@ export default function NewSchedulePage() {
   const [recurDays, setRecurDays] = useState<number[]>([])
   const [children, setChildren] = useState<ChildProfile[]>([])
   const [childId, setChildId] = useState<string | null>(null)
+  const [fees, setFees] = useState<AcademyFee[]>([])
+  const [feeId, setFeeId] = useState<string | null>(null)
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.from('child_profiles').select('*').order('sort_order').then(({ data }) => {
-      const list = (data ?? []) as ChildProfile[]
+    Promise.all([
+      supabase.from('child_profiles').select('*').order('sort_order'),
+      supabase.from('academy_fees').select('id, name, amount, child_id, is_active').eq('is_active', true).order('created_at'),
+    ]).then(([childrenRes, feesRes]) => {
+      const list = (childrenRes.data ?? []) as ChildProfile[]
       setChildren(list)
       if (list.length === 1) setChildId(list[0].id)
+      setFees((feesRes.data ?? []) as AcademyFee[])
     })
   }, [])
 
@@ -75,6 +81,7 @@ export default function NewSchedulePage() {
     const { error: err } = await supabase.from('schedule_events').insert({
       user_id:      user.id,
       child_id:     childId,
+      fee_id:       form.category === 'academy' ? feeId : null,
       title:        form.title.trim(),
       category:     form.category,
       subject:      form.subject.trim()  || null,
@@ -252,6 +259,32 @@ export default function NewSchedulePage() {
             <input type="time" value={form.endTime} onChange={e => set('endTime', e.target.value)} className={input} />
           </div>
         </div>
+
+        {/* 학원비 연결 (academy 카테고리에만 표시) */}
+        {form.category === 'academy' && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">학원비 연결</label>
+            {fees.filter(f => !childId || !f.child_id || f.child_id === childId).length === 0 ? (
+              <p className="text-xs text-gray-400 py-1">등록된 학원비가 없어요. 비용 탭에서 먼저 추가해주세요.</p>
+            ) : (
+              <select
+                value={feeId ?? ''}
+                onChange={e => setFeeId(e.target.value || null)}
+                className={input}
+              >
+                <option value="">연결 안 함</option>
+                {fees
+                  .filter(f => !childId || !f.child_id || f.child_id === childId)
+                  .map(f => (
+                    <option key={f.id} value={f.id}>
+                      {f.name} ({f.amount.toLocaleString('ko-KR')}원/월)
+                    </option>
+                  ))
+                }
+              </select>
+            )}
+          </div>
+        )}
 
         {/* 메모 */}
         <div>

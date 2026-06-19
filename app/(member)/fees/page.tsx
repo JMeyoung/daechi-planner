@@ -2,9 +2,10 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { CHILD_COLORS, BADGE_COLOR, DOT_COLOR } from '@/lib/child-colors'
-import type { AcademyFee, ChildProfile } from '@/types'
+import type { AcademyFee, ChildProfile, ScheduleEvent } from '@/types'
 
 // recharts(~80KB)는 차트가 보일 때만 로드 — 초기 번들에서 제외
 const FeesCharts = dynamic(() => import('./fees-charts'), {
@@ -13,6 +14,17 @@ const FeesCharts = dynamic(() => import('./fees-charts'), {
 })
 
 const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+const DAYS_KO = ['일', '월', '화', '수', '목', '금', '토']
+
+function fmtScheduleLabel(e: Pick<ScheduleEvent, 'is_recurring' | 'recur_days' | 'start_at' | 'end_at'>): string {
+  const t = new Date(e.start_at)
+  const time = `${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`
+  if (e.is_recurring && e.recur_days?.length) {
+    const days = [...e.recur_days].sort((a, b) => a - b).map(d => DAYS_KO[d]).join('·')
+    return `${days} ${time}`
+  }
+  return `${t.getMonth() + 1}/${t.getDate()} ${time}`
+}
 
 const COLOR_MAP: Record<string, string> = {
   blue: '#2d4470',   // navy-600
@@ -40,6 +52,7 @@ export default function FeesPage() {
   const supabase = createClient()
   const [fees, setFees] = useState<AcademyFee[]>([])
   const [children, setChildren] = useState<ChildProfile[]>([])
+  const [linkedSchedules, setLinkedSchedules] = useState<ScheduleEvent[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editing, setEditing] = useState<AcademyFee | null>(null)
@@ -58,12 +71,14 @@ export default function FeesPage() {
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
-      const [feesRes, childrenRes] = await Promise.all([
+      const [feesRes, childrenRes, schedulesRes] = await Promise.all([
         supabase.from('academy_fees').select('*').eq('user_id', user.id).order('created_at'),
         supabase.from('child_profiles').select('*').eq('user_id', user.id).order('sort_order'),
+        supabase.from('schedule_events').select('id, title, fee_id, is_recurring, recur_days, start_at, end_at').not('fee_id', 'is', null),
       ])
       if (feesRes.data) setFees(feesRes.data as AcademyFee[])
       if (childrenRes.data) setChildren(childrenRes.data as ChildProfile[])
+      if (schedulesRes.data) setLinkedSchedules(schedulesRes.data as ScheduleEvent[])
     } finally {
       setLoading(false)
     }
@@ -245,10 +260,11 @@ export default function FeesPage() {
           activeFees.map(fee => {
             const child = children.find(c => c.id === fee.child_id)
             const dday = getDday(fee.payment_day)
+            const feeSchedules = linkedSchedules.filter(s => s.fee_id === fee.id)
             return (
               <div key={fee.id} className={`bg-white rounded-xl border p-4 transition-opacity ${!fee.is_active ? 'opacity-50' : 'border-gray-200'}`}>
                 <div className="flex items-center gap-3">
-                  <span className={`w-2.5 h-2.5 rounded-full shrink-0`} style={{ backgroundColor: COLOR_MAP[fee.color] ?? '#6b7280' }} />
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: COLOR_MAP[fee.color] ?? '#6b7280' }} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-sm font-semibold text-gray-900">{fee.name}</span>
@@ -264,6 +280,20 @@ export default function FeesPage() {
                       {fee.payment_day && <span className="text-xs text-gray-400">매월 {fee.payment_day}일</span>}
                       {fee.memo && <span className="text-xs text-gray-400 truncate">{fee.memo}</span>}
                     </div>
+                    {feeSchedules.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {feeSchedules.map(s => (
+                          <Link
+                            key={s.id}
+                            href={`/schedule/${s.id}`}
+                            className="inline-flex items-center gap-1 text-xs bg-navy-50 text-navy-700 border border-navy-200 rounded-full px-2 py-0.5 hover:bg-navy-100 transition-colors"
+                          >
+                            <span className="font-medium">{s.title}</span>
+                            <span className="text-navy-400">{fmtScheduleLabel(s)}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <button onClick={() => toggleActive(fee)} className="text-xs text-gray-400 hover:text-gray-600 px-1.5 py-1 rounded transition-colors">{fee.is_active ? '비활성' : '활성'}</button>

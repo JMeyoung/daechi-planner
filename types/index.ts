@@ -62,6 +62,7 @@ export type ScheduleEvent = {
   id: string
   user_id: string
   child_id: string | null
+  fee_id: string | null
   title: string
   category: ScheduleCategory
   subject: string | null

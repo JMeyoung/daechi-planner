@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { DOT_COLOR } from '@/lib/child-colors'
-import type { ScheduleEvent, ChildProfile } from '@/types'
+import type { ScheduleEvent, ChildProfile, AcademyFee } from '@/types'
 
 const DAYS_KO = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -56,6 +56,7 @@ function fmtTime(s: string) {
 export default function SchedulePage() {
   const [events, setEvents] = useState<ScheduleEvent[]>([])
   const [children, setChildren] = useState<ChildProfile[]>([])
+  const [fees, setFees] = useState<AcademyFee[]>([])
   const [childFilter, setChildFilter] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -68,17 +69,20 @@ export default function SchedulePage() {
   useEffect(() => {
     const supabase = createClient()
     Promise.all([
-      supabase.from('schedule_events').select('id, title, category, subject, location, start_at, end_at, is_recurring, recur_days, child_id, user_id, memo, created_at, updated_at'),
+      supabase.from('schedule_events').select('id, title, category, subject, location, start_at, end_at, is_recurring, recur_days, child_id, fee_id, user_id, memo, created_at, updated_at'),
       supabase.from('child_profiles').select('id, name, color, grade, sort_order').order('sort_order'),
-    ]).then(([eventsRes, childrenRes]) => {
+      supabase.from('academy_fees').select('id, name, amount, child_id, is_active, color'),
+    ]).then(([eventsRes, childrenRes, feesRes]) => {
       setEvents(eventsRes.data ?? [])
       setChildren((childrenRes.data ?? []) as ChildProfile[])
+      setFees((feesRes.data ?? []) as AcademyFee[])
     }).finally(() => {
       setLoading(false)
     })
   }, [])
 
   const childById = new Map(children.map(c => [c.id, c]))
+  const feeById = new Map(fees.map(f => [f.id, f]))
   const filteredEvents = childFilter
     ? events.filter(e => e.child_id === childFilter)
     : events
@@ -205,6 +209,7 @@ export default function SchedulePage() {
           dayEvents.map(event => {
             const style = CATEGORY_STYLE[event.category]
             const child = event.child_id ? childById.get(event.child_id) : null
+            const fee = event.fee_id ? feeById.get(event.fee_id) : null
             return (
               <Link
                 key={event.id}
@@ -237,6 +242,11 @@ export default function SchedulePage() {
                     </p>
                     {event.location && (
                       <p className="text-xs text-gray-400 mt-0.5">{event.location}</p>
+                    )}
+                    {fee && (
+                      <p className="text-xs text-gold-700 font-medium mt-1">
+                        💰 {fee.name} · {fee.amount.toLocaleString('ko-KR')}원/월
+                      </p>
                     )}
                   </div>
                   <span className="text-gray-300 mt-1">›</span>
