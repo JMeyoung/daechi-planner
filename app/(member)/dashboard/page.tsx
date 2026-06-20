@@ -118,6 +118,12 @@ export default async function DashboardPage() {
 
   const config = profile.dashboard_config ?? DEFAULT_CONFIG
 
+  // 기존 사용자들의 설정에 ai_report가 없다면 기본 위치(welcome 바로 다음)에 강제 주입
+  if (!config.includes('ai_report')) {
+    const welcomeIndex = config.indexOf('welcome')
+    config.splice(welcomeIndex !== -1 ? welcomeIndex + 1 : 0, 0, 'ai_report')
+  }
+
   const renderWelcome = () => (
     <div key="welcome" className="relative overflow-hidden bg-navy-gradient rounded-2xl p-5 text-white animate-fade-up">
       <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-gold-400/8 pointer-events-none" aria-hidden="true" />

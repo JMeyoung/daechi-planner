@@ -149,6 +149,7 @@ export default function SettingsPage() {
 
   const WIDGET_NAMES: Record<string, string> = {
     welcome: '환영 메시지',
+    ai_report: '✨ AI 학습 리포트',
     dday: 'D-day 카운터',
     stats: '요약 통계 (저장, 일정 등)',
     schedule: '오늘의 일정',
