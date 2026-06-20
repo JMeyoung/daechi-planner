@@ -6,6 +6,8 @@ import { createClient } from '@/lib/supabase/client'
 import Button from '@/components/ui/button'
 import { CHILD_COLORS, BADGE_COLOR, DOT_COLOR } from '@/lib/child-colors'
 import FeedbackForm from './feedback-form'
+import { ThemeToggle } from '@/components/theme-toggle'
+import PushPermission from '@/components/push-permission'
 import type { InterestTag, Profile, ChildProfile, Subscription } from '@/types'
 
 const GRADE_LABEL: Record<number, string> = {
@@ -20,6 +22,8 @@ export default function SettingsPage() {
   const [profile, setProfile] = useState<Partial<Profile>>({})
   const [tags, setTags] = useState<InterestTag[]>([])
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set())
+  const [dashboardConfig, setDashboardConfig] = useState<string[]>(["welcome", "dday", "stats", "schedule", "briefings"])
+  const [spouseEmail, setSpouseEmail] = useState('')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -46,7 +50,12 @@ export default function SettingsPage() {
         supabase.from('subscriptions').select('*').eq('user_id', user.id).single(),
       ])
 
-      if (profileRes.data) setProfile(profileRes.data)
+      if (profileRes.data) {
+        setProfile(profileRes.data)
+        if (profileRes.data.dashboard_config) {
+          setDashboardConfig(profileRes.data.dashboard_config)
+        }
+      }
       if (tagsRes.data) setTags(tagsRes.data)
       if (interestsRes.data) setSelectedTags(new Set(interestsRes.data.map(r => r.tag_id)))
       if (childrenRes.data) setChildren(childrenRes.data as ChildProfile[])
@@ -72,6 +81,7 @@ export default function SettingsPage() {
     await supabase.from('profiles').update({
       full_name: profile.full_name,
       child_grade: profile.child_grade,
+      dashboard_config: dashboardConfig,
     }).eq('id', user.id)
 
     await supabase.from('user_interests').delete().eq('user_id', user.id)
@@ -135,7 +145,25 @@ export default function SettingsPage() {
     setShowAddChild(false)
   }
 
-  const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400'
+  const inputClass = 'w-full border border-gray-300 dark:border-navy-600 bg-white dark:bg-navy-900 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400'
+
+  const WIDGET_NAMES: Record<string, string> = {
+    welcome: '환영 메시지',
+    dday: 'D-day 카운터',
+    stats: '요약 통계 (저장, 일정 등)',
+    schedule: '오늘의 일정',
+    briefings: '최신 브리프',
+  }
+
+  function moveWidget(index: number, direction: -1 | 1) {
+    setDashboardConfig(prev => {
+      const next = [...prev]
+      const target = index + direction
+      if (target < 0 || target >= next.length) return prev
+      ;[next[index], next[target]] = [next[target], next[index]]
+      return next
+    })
+  }
 
   const isPremium = subscription?.plan === 'premium' && subscription?.status === 'active'
   const periodEnd = subscription?.current_period_end
@@ -148,45 +176,93 @@ export default function SettingsPage() {
     if (res.ok) setSubscription(prev => prev ? { ...prev, plan: 'free', status: 'canceled' } : prev)
   }
 
+  async function handleSpouseAction(action: 'invite' | 'cancel' | 'unlink') {
+    setSaving(true)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    let updates: Partial<Profile> = {}
+    if (action === 'invite') {
+      if (!spouseEmail.trim() || !spouseEmail.includes('@')) {
+        alert('유효한 이메일을 입력해주세요.')
+        setSaving(false)
+        return
+      }
+      updates = { spouse_email: spouseEmail.trim(), spouse_status: 'pending' }
+    } else {
+      updates = { spouse_email: null, spouse_id: null, spouse_status: 'none' }
+      setSpouseEmail('')
+    }
+
+    await supabase.from('profiles').update(updates).eq('id', user.id)
+    setProfile(p => ({ ...p, ...updates }))
+    setSaving(false)
+  }
+
   return (
     <div className="max-w-lg">
       <h1 className="text-lg font-bold text-gray-900 mb-6">설정</h1>
 
-      {/* 구독 관리 */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-5">
-        <h2 className="font-semibold text-gray-900 mb-4">구독</h2>
-        {isPremium ? (
-          <div className="flex items-center justify-between">
+      {/* 푸시 알림 설정 */}
+      <div className="mb-5">
+        <PushPermission />
+      </div>
+
+      {/* 앱 설정 */}
+      <div className="bg-white dark:bg-navy-800 rounded-2xl border border-gray-200 dark:border-navy-700 p-5 mb-5">
+        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">앱 설정</h2>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-0.5">화면 테마</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">앱의 화면 테마를 설정합니다.</p>
+          </div>
+          <div className="w-48">
+            <ThemeToggle />
+          </div>
+        </div>
+      </div>
+
+      {/* 배우자 연동 */}
+      <div className="bg-white dark:bg-navy-800 rounded-2xl border border-gray-200 dark:border-navy-700 p-5 mb-5 space-y-4">
+        <div>
+          <h2 className="font-semibold text-gray-900 dark:text-white">배우자 연동</h2>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+            배우자와 자녀 일정, 학원비, 만족도 기록을 공유합니다.
+          </p>
+        </div>
+        
+        {profile.spouse_status === 'accepted' ? (
+          <div className="flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/50 p-3 rounded-xl">
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-bold text-gold-700">✦ 스탠다드</span>
-                <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-green-100 text-green-700">
-                  활성
-                </span>
-              </div>
-              {periodEnd && (
-                <p className="text-xs text-gray-400">다음 결제일: {periodEnd}</p>
-              )}
+              <p className="text-sm font-medium text-green-800 dark:text-green-300">연동 완료</p>
+              <p className="text-xs text-green-600 dark:text-green-400">{profile.spouse_email}</p>
             </div>
-            <button
-              onClick={handleCancelSubscription}
-              className="text-sm text-red-500 font-medium hover:text-red-600 transition-colors border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-50"
-            >
-              구독 취소
+            <button onClick={() => handleSpouseAction('unlink')} disabled={saving} className="text-xs text-gray-500 hover:text-red-500 border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 px-3 py-1.5 rounded-lg transition-colors">
+              연동 해제
+            </button>
+          </div>
+        ) : profile.spouse_status === 'pending' ? (
+          <div className="flex items-center justify-between bg-gold-50 dark:bg-gold-900/20 border border-gold-200 dark:border-gold-800/50 p-3 rounded-xl">
+            <div>
+              <p className="text-sm font-medium text-gold-800 dark:text-gold-300">초대 대기 중</p>
+              <p className="text-xs text-gold-600 dark:text-gold-400">{profile.spouse_email}</p>
+            </div>
+            <button onClick={() => handleSpouseAction('cancel')} disabled={saving} className="text-xs text-gray-500 hover:text-red-500 border border-gray-200 dark:border-navy-600 bg-white dark:bg-navy-800 px-3 py-1.5 rounded-lg transition-colors">
+              초대 취소
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-700 mb-0.5">무료 플랜</p>
-              <p className="text-xs text-gray-400">스탠다드로 업그레이드하고 모든 콘텐츠를 열람하세요.</p>
-            </div>
-            <Link
-              href="/pricing"
-              className="text-sm font-semibold bg-gold-500 text-navy-900 hover:bg-gold-400 transition-colors px-3 py-1.5 rounded-lg shrink-0 ml-3"
-            >
-              업그레이드
-            </Link>
+          <div className="flex gap-2">
+            <input
+              type="email"
+              value={spouseEmail}
+              onChange={e => setSpouseEmail(e.target.value)}
+              placeholder="배우자의 이메일 입력"
+              className={inputClass}
+            />
+            <button onClick={() => handleSpouseAction('invite')} disabled={saving || !spouseEmail} className="text-sm bg-navy-800 text-white px-4 py-2 rounded-lg font-medium hover:bg-navy-900 transition-colors shrink-0 disabled:opacity-50">
+              초대하기
+            </button>
           </div>
         )}
       </div>
@@ -256,8 +332,8 @@ export default function SettingsPage() {
 
       <form onSubmit={handleSave} className="space-y-5">
         {/* 프로필 */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-4">
-          <h2 className="font-semibold text-gray-900">프로필</h2>
+        <div className="bg-white dark:bg-navy-800 rounded-2xl border border-gray-200 dark:border-navy-700 p-5 space-y-4">
+          <h2 className="font-semibold text-gray-900 dark:text-white">프로필</h2>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">이름</label>
             <input
@@ -283,6 +359,29 @@ export default function SettingsPage() {
               <option value="5">고등학교 2학년</option>
               <option value="6">고등학교 3학년</option>
             </select>
+          </div>
+        </div>
+
+        {/* 대시보드 설정 */}
+        <div className="bg-white dark:bg-navy-800 rounded-2xl border border-gray-200 dark:border-navy-700 p-5 space-y-4">
+          <div>
+            <h2 className="font-semibold text-gray-900 dark:text-white">대시보드 위젯 순서</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">화살표를 눌러 대시보드에 표시되는 위젯의 순서를 변경할 수 있습니다.</p>
+          </div>
+          <div className="space-y-2">
+            {dashboardConfig.map((key, i) => (
+              <div key={key} className="flex items-center justify-between p-3 rounded-xl border border-gray-200 dark:border-navy-700 bg-gray-50 dark:bg-navy-900/50">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{WIDGET_NAMES[key] || key}</span>
+                <div className="flex items-center gap-1">
+                  <button type="button" onClick={() => moveWidget(i, -1)} disabled={i === 0} className="p-1 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors">
+                    ▲
+                  </button>
+                  <button type="button" onClick={() => moveWidget(i, 1)} disabled={i === dashboardConfig.length - 1} className="p-1 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors">
+                    ▼
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 

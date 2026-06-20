@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { createClient, getUser } from '@/lib/supabase/server'
 import ContentCard from '@/components/content/content-card'
 import DdayWidget from '@/components/dashboard/dday-widget'
+import AiReportWidget from '@/components/dashboard/ai-report-widget'
 import { DOT_COLOR } from '@/lib/child-colors'
 import { FEATURES } from '@/lib/features'
 import { detectConflicts } from '@/lib/schedule-conflicts'
@@ -50,6 +51,8 @@ const CATEGORY_LABEL: Record<string, string> = {
 }
 
 export const metadata: Metadata = { title: '대시보드' }
+
+const DEFAULT_CONFIG = ["welcome", "ai_report", "dday", "stats", "schedule", "briefings"]
 
 export default async function DashboardPage() {
   const [user, supabase] = await Promise.all([getUser(), createClient()])
@@ -113,70 +116,61 @@ export default async function DashboardPage() {
     c.tags?.some(t => t.includes('입시') || t.includes('대입') || t.includes('수능') || t.includes('내신'))
   )
 
-  return (
-    <div className="space-y-6">
-      {/* ── Welcome Card ───────────────────────────── */}
-      <div className="relative overflow-hidden bg-navy-gradient rounded-2xl p-5 text-white animate-fade-up">
-        {/* Decorative circles */}
-        <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-gold-400/8 pointer-events-none" aria-hidden="true" />
-        <div className="absolute -right-2 -bottom-10 w-24 h-24 rounded-full bg-white/5 pointer-events-none" aria-hidden="true" />
-        {/* Gold accent line */}
-        <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold-400/20 to-transparent" aria-hidden="true" />
+  const config = profile.dashboard_config ?? DEFAULT_CONFIG
 
-        <p className="text-white/50 text-sm mb-0.5">안녕하세요</p>
-        <h1 className="font-display text-xl font-bold text-white">
-          {profile?.full_name ?? user.email?.split('@')[0]} 님
-        </h1>
-        {/* 베타 기간 동안 플랜 표시 및 업그레이드 숨김
-        <div className="flex items-center gap-2 mt-3">
-          <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold ${
-            isPremium
-              ? 'bg-gold-400/20 text-gold-300 border border-gold-400/30'
-              : 'bg-white/10 text-white/70 border border-white/15'
-          }`}>
-            {isPremium ? '✦ 스탠다드' : '무료 플랜'}
-          </span>
-          {!isPremium && (
-            <Link href="/pricing" className="text-xs text-gold-400/70 hover:text-gold-300 underline underline-offset-2 transition-colors">
-              업그레이드 →
-            </Link>
-          )}
-        </div>
-        */}
-      </div>
+  const renderWelcome = () => (
+    <div key="welcome" className="relative overflow-hidden bg-navy-gradient rounded-2xl p-5 text-white animate-fade-up">
+      <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-gold-400/8 pointer-events-none" aria-hidden="true" />
+      <div className="absolute -right-2 -bottom-10 w-24 h-24 rounded-full bg-white/5 pointer-events-none" aria-hidden="true" />
+      <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold-400/20 to-transparent" aria-hidden="true" />
+      <p className="text-white/50 text-sm mb-0.5">안녕하세요</p>
+      <h1 className="font-display text-xl font-bold text-white">
+        {profile?.full_name ?? user.email?.split('@')[0]} 님
+      </h1>
+    </div>
+  )
 
-      {/* ── D-day 카운터 ───────────────────────────── */}
-      <div className="animate-fade-up-1">
-        <DdayWidget counters={ddayCounters} />
-      </div>
+  const renderDday = () => (
+    <div key="dday" className="animate-fade-up-1">
+      <DdayWidget counters={ddayCounters} />
+    </div>
+  )
 
-      {/* ── Quick Stats ────────────────────────────── */}
-      {(FEATURES.bookmarks || FEATURES.schedule) && (
-        <div className="grid grid-cols-3 gap-3 animate-fade-up-1">
-          {FEATURES.bookmarks && (
-            <div className="card-lift p-4 text-center">
-              <p className="font-display text-3xl font-bold text-navy-800">{bookmarkCount}</p>
-              <p className="text-xs text-gray-400 mt-1 font-medium">저장한 북마크</p>
-            </div>
-          )}
-          {FEATURES.schedule && (
-            <Link href="/schedule" className="card-lift p-4 text-center">
-              <p className="font-display text-3xl font-bold text-navy-800">{todayEvents.length}</p>
-              <p className="text-xs text-gray-400 mt-1 font-medium">오늘 일정</p>
-            </Link>
-          )}
-          <Link href="/teachers" className="card-lift p-4 text-center">
-            <p className="font-display text-3xl font-bold text-navy-800">{teacherCount}</p>
-            <p className="text-xs text-gray-400 mt-1 font-medium">선생님 메모</p>
+  const renderAiReport = () => (
+    <div key="ai_report" className="animate-fade-up-1">
+      <AiReportWidget childrenProfiles={children} />
+    </div>
+  )
+
+  const renderStats = () => (
+    (FEATURES.bookmarks || FEATURES.schedule) ? (
+      <div key="stats" className="grid grid-cols-3 gap-3 animate-fade-up-1">
+        {FEATURES.bookmarks && (
+          <div className="card-lift p-4 text-center">
+            <p className="font-display text-3xl font-bold text-navy-800 dark:text-white">{bookmarkCount}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 font-medium">저장한 북마크</p>
+          </div>
+        )}
+        {FEATURES.schedule && (
+          <Link href="/schedule" className="card-lift p-4 text-center">
+            <p className="font-display text-3xl font-bold text-navy-800 dark:text-white">{todayEvents.length}</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 font-medium">오늘 일정</p>
           </Link>
-        </div>
-      )}
+        )}
+        <Link href="/teachers" className="card-lift p-4 text-center">
+          <p className="font-display text-3xl font-bold text-navy-800 dark:text-white">{teacherCount}</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 font-medium">선생님 메모</p>
+        </Link>
+      </div>
+    ) : null
+  )
 
-      {/* ── 다자녀 픽업 충돌 경고 ──────────────────── */}
+  const renderSchedule = () => (
+    <div key="schedule" className="space-y-6">
       {conflicts.length > 0 && (
         <div className="animate-fade-up-2">
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 space-y-2">
-            <p className="text-xs font-semibold text-red-700 flex items-center gap-1.5">
+          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 rounded-xl p-4 space-y-2">
+            <p className="text-xs font-semibold text-red-700 dark:text-red-400 flex items-center gap-1.5">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
@@ -199,19 +193,18 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* ── 오늘의 일정 ────────────────────────────── */}
       {FEATURES.schedule && <div className="animate-fade-up-2">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-gray-900">오늘의 일정</h2>
-          <Link href="/schedule" className="text-sm text-gold-600 font-medium hover:text-gold-700 transition-colors">
+          <h2 className="font-semibold text-gray-900 dark:text-white">오늘의 일정</h2>
+          <Link href="/schedule" className="text-sm text-gold-600 dark:text-gold-500 font-medium hover:text-gold-700 dark:hover:text-gold-400 transition-colors">
             전체 보기
           </Link>
         </div>
 
         {todayEvents.length === 0 ? (
-          <div className="bg-surface-50 border border-surface-border rounded-2xl p-6 text-center">
-            <p className="text-gray-400 text-sm mb-2">오늘 등록된 일정이 없어요.</p>
-            <Link href="/schedule/new" className="text-sm text-gold-600 font-medium hover:underline">
+          <div className="bg-surface-50 dark:bg-navy-800/50 border border-surface-border dark:border-navy-700 rounded-2xl p-6 text-center">
+            <p className="text-gray-400 dark:text-gray-500 text-sm mb-2">오늘 등록된 일정이 없어요.</p>
+            <Link href="/schedule/new" className="text-sm text-gold-600 dark:text-gold-500 font-medium hover:underline">
               일정 추가하기 →
             </Link>
           </div>
@@ -223,13 +216,11 @@ export default async function DashboardPage() {
                 <Link
                   key={event.id}
                   href={`/schedule/${event.id}`}
-                  className="flex items-center gap-3 bg-white border border-surface-border rounded-xl px-4 py-3
-                             hover:bg-surface-50 hover:border-gold-200 transition-all duration-150"
+                  className="flex items-center gap-3 bg-white dark:bg-navy-800 border border-surface-border dark:border-navy-700 rounded-xl px-4 py-3
+                             hover:bg-surface-50 dark:hover:bg-navy-800/80 hover:border-gold-200 dark:hover:border-gold-500/50 transition-all duration-150"
                   style={{ animationDelay: `${i * 50}ms` }}
                 >
-                  {/* Category color bar */}
                   <div className={`w-1 h-8 rounded-full shrink-0 ${CATEGORY_COLOR[event.category] ?? 'bg-gray-200'}`} />
-
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">
                       <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium ${CATEGORY_BADGE[event.category]}`}>
@@ -243,10 +234,9 @@ export default async function DashboardPage() {
                       )}
                       {event.subject && <span className="text-xs text-gray-400">{event.subject}</span>}
                     </div>
-                    <p className="text-sm font-semibold text-gray-900 truncate">{event.title}</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{event.title}</p>
                   </div>
-
-                  <p className="text-xs text-gray-400 shrink-0 font-medium">
+                  <p className="text-xs text-gray-400 dark:text-gray-500 shrink-0 font-medium">
                     {fmtTime(event.start_at)}{event.end_at ? `~${fmtTime(event.end_at)}` : ''}
                   </p>
                 </Link>
@@ -255,8 +245,11 @@ export default async function DashboardPage() {
           </div>
         )}
       </div>}
+    </div>
+  )
 
-      {/* ── 주간 입시 브리프 하이라이트 ─────────────── */}
+  const renderBriefings = () => (
+    <div key="briefings" className="space-y-6">
       {FEATURES.briefings && admissionBrief && (
         <div className="animate-fade-up-3">
           <Link
@@ -273,11 +266,10 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* ── 최신 브리프 ────────────────────────────── */}
       {FEATURES.briefings && <div className="animate-fade-up-3">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-gray-900">최신 브리프</h2>
-          <Link href="/briefings" className="text-sm text-gold-600 font-medium hover:text-gold-700 transition-colors">
+          <h2 className="font-semibold text-gray-900 dark:text-white">최신 브리프</h2>
+          <Link href="/briefings" className="text-sm text-gold-600 dark:text-gold-500 font-medium hover:text-gold-700 dark:hover:text-gold-400 transition-colors">
             전체 보기
           </Link>
         </div>
@@ -289,11 +281,26 @@ export default async function DashboardPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-surface-50 border border-surface-border rounded-2xl p-8 text-center">
-            <p className="text-gray-400 text-sm">아직 게시된 콘텐츠가 없습니다.</p>
+          <div className="bg-surface-50 dark:bg-navy-800/50 border border-surface-border dark:border-navy-700 rounded-2xl p-8 text-center">
+            <p className="text-gray-400 dark:text-gray-500 text-sm">아직 게시된 콘텐츠가 없습니다.</p>
           </div>
         )}
       </div>}
+    </div>
+  )
+
+  const WIDGETS: Record<string, () => React.ReactNode> = {
+    welcome: renderWelcome,
+    ai_report: renderAiReport,
+    dday: renderDday,
+    stats: renderStats,
+    schedule: renderSchedule,
+    briefings: renderBriefings,
+  }
+
+  return (
+    <div className="space-y-6">
+      {config.map(key => WIDGETS[key] && WIDGETS[key]())}
     </div>
   )
 }

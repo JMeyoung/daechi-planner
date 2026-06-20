@@ -44,19 +44,16 @@ export default function ContentCard({ item, showLock = true }: ContentCardProps)
       <div className="flex items-start justify-between gap-2 mb-2.5">
         <div className="flex items-center gap-1.5 flex-wrap">
           <Badge category={item.category} />
-          {item.is_premium && (
-            <Badge variant="gold">스탠다드</Badge>
-          )}
         </div>
         {isLocked && <LockIcon />}
       </div>
 
-      <h3 className={`font-semibold text-[15px] leading-[1.4] text-gray-900 group-hover:text-navy-800 transition-colors mb-1.5 ${isLocked ? 'opacity-50' : ''}`}>
+      <h3 className={`font-semibold text-[15px] leading-[1.4] text-gray-900 dark:text-white group-hover:text-navy-800 dark:group-hover:text-gold-400 transition-colors mb-1.5 ${isLocked ? 'opacity-50' : ''}`}>
         {item.title}
       </h3>
 
       {item.summary && (
-        <p className={`text-sm text-gray-500 leading-relaxed line-clamp-2 mb-3 ${isLocked ? 'opacity-40' : ''}`}>
+        <p className={`text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2 mb-3 ${isLocked ? 'opacity-40' : ''}`}>
           {isLocked ? '스탠다드 회원에게만 공개됩니다.' : item.summary}
         </p>
       )}

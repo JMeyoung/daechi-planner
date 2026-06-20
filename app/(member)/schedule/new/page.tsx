@@ -60,6 +60,10 @@ export default function NewSchedulePage() {
   async function handleSave() {
     if (!form.title.trim()) { setError('학원·일정명을 입력해주세요.'); return }
     if (isRecurring && recurDays.length === 0) { setError('반복 요일을 하나 이상 선택해주세요.'); return }
+    if (form.endTime && form.startTime >= form.endTime) {
+      setError('종료 시간은 시작 시간 이후여야 합니다.');
+      return
+    }
 
     setSaving(true)
     setError('')

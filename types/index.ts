@@ -9,6 +9,10 @@ export type Profile = {
   full_name: string | null
   role: UserRole
   child_grade: 1 | 2 | 3 | 4 | 5 | 6 | null
+  dashboard_config: string[]
+  spouse_email: string | null
+  spouse_id: string | null
+  spouse_status: 'none' | 'pending' | 'accepted'
   created_at: string
   updated_at: string
 }
@@ -133,6 +137,30 @@ export type TeacherMemo = {
   subject: string | null
   phone: string | null
   memo: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type AcademyReview = {
+  id: string
+  user_id: string
+  child_id: string | null
+  academy_name: string
+  rating: 1 | 2 | 3 | 4 | 5
+  review_text: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type ExamScore = {
+  id: string
+  user_id: string
+  child_id: string
+  exam_name: string
+  exam_date: string
+  subject: string
+  score: number | null
+  percentile: number | null
   created_at: string
   updated_at: string
 }

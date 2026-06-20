@@ -57,8 +57,8 @@ export default async function BriefingDetailPage({ params }: Props) {
     isBookmarked = !!bookmarkRes.data
   }
 
-  // 오픈 베타 기간 동안 스탠다드 잠금 해제 (임시)
-  const isLocked = false // content.is_premium && !isPremium
+  // 모든 콘텐츠를 조건 없이 열람 가능하게 설정 (무료/유료 구분 제거)
+  const isLocked = false
   const toggleAction = toggleBookmark.bind(null, id, isBookmarked)
 
   return (
@@ -78,7 +78,6 @@ export default async function BriefingDetailPage({ params }: Props) {
         {/* Meta */}
         <div className="flex items-center gap-2 mb-4 animate-fade-up">
           <Badge category={content.category} />
-          {content.is_premium && <Badge variant="orange">스탠다드</Badge>}
         </div>
 
         {/* Title */}
@@ -96,13 +95,6 @@ export default async function BriefingDetailPage({ params }: Props) {
         {/* Date */}
         {content.published_at && (
           <p className="text-sm text-gray-400 mb-7 animate-fade-up-1">{formatDate(content.published_at)}</p>
-        )}
-
-        {/* 오픈 베타 무료 제공 알림 (임시) */}
-        {content.is_premium && (
-          <div className="bg-gold-100 text-gold-700 text-sm px-4 py-3 rounded-xl mb-6 animate-fade-up-2 font-medium">
-            ✨ 오픈 베타 기념으로 스탠다드 콘텐츠를 무료로 제공하고 있습니다.
-          </div>
         )}
 
         {/* Divider */}

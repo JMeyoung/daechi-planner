@@ -53,11 +53,22 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 }
 
+import { ThemeProvider } from '@/components/theme-provider'
+import { ServiceWorkerRegister } from '@/components/sw-register'
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <body className={`${notoSansKR.variable} ${playfair.variable} font-sans antialiased`}>
-        {children}
+        <ServiceWorkerRegister />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

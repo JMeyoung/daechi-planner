@@ -38,7 +38,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
   }
 
   const headerBase = 'sticky top-0 z-50 transition-all duration-300'
-  const headerScrolled = 'bg-white/90 backdrop-blur-md border-b border-surface-border shadow-header'
+  const headerScrolled = 'bg-white/90 dark:bg-navy-950/90 backdrop-blur-md border-b border-surface-border dark:border-navy-700 shadow-header dark:shadow-none'
   const headerTransparent = 'bg-transparent border-b border-transparent'
 
   return (
@@ -48,7 +48,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
         <Link
           href="/"
           className={`font-display font-bold text-lg tracking-tight transition-colors ${
-            scrolled || !isHome ? 'text-navy-900' : 'text-white'
+            scrolled || !isHome ? 'text-navy-900 dark:text-white' : 'text-white'
           }`}
         >
           대치 플래너
@@ -63,8 +63,8 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
               className={`transition-colors font-medium ${
                 scrolled || !isHome
                   ? pathname === link.href
-                    ? 'text-navy-900'
-                    : 'text-gray-500 hover:text-navy-900'
+                    ? 'text-navy-900 dark:text-white'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-navy-900 dark:hover:text-white'
                   : pathname === link.href
                     ? 'text-white'
                     : 'text-white/60 hover:text-white'
@@ -82,7 +82,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
               <Link
                 href="/dashboard"
                 className={`text-sm font-medium transition-colors ${
-                  scrolled || !isHome ? 'text-gray-600 hover:text-navy-900' : 'text-white/70 hover:text-white'
+                  scrolled || !isHome ? 'text-gray-600 dark:text-gray-300 hover:text-navy-900 dark:hover:text-white' : 'text-white/70 hover:text-white'
                 }`}
               >
                 내 플래너
@@ -90,7 +90,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
               <button
                 onClick={handleSignOut}
                 className={`text-sm transition-colors ${
-                  scrolled || !isHome ? 'text-gray-400 hover:text-gray-600' : 'text-white/40 hover:text-white/70'
+                  scrolled || !isHome ? 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300' : 'text-white/40 hover:text-white/70'
                 }`}
               >
                 로그아웃
@@ -101,7 +101,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
               <Link
                 href="/login"
                 className={`text-sm font-medium transition-colors ${
-                  scrolled || !isHome ? 'text-gray-600 hover:text-navy-900' : 'text-white/70 hover:text-white'
+                  scrolled || !isHome ? 'text-gray-600 dark:text-gray-300 hover:text-navy-900 dark:hover:text-white' : 'text-white/70 hover:text-white'
                 }`}
               >
                 로그인
@@ -123,7 +123,7 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
         {/* Mobile menu button */}
         <button
           className={`md:hidden p-2 transition-colors ${
-            scrolled || !isHome ? 'text-gray-600' : 'text-white'
+            scrolled || !isHome ? 'text-gray-600 dark:text-gray-300' : 'text-white'
           }`}
           onClick={() => setMenuOpen(v => !v)}
           aria-label="메뉴"
@@ -141,30 +141,30 @@ export default function Header({ userEmail }: { userEmail?: string | null }) {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-surface-border bg-white/95 backdrop-blur-md px-4 py-3 space-y-1">
+        <div className="md:hidden border-t border-surface-border dark:border-navy-700 bg-white/95 dark:bg-navy-950/95 backdrop-blur-md px-4 py-3 space-y-1">
           {NAV_LINKS.map(link => (
             <Link
               key={link.href}
               href={link.href}
               className={`block text-sm py-2 font-medium transition-colors rounded-lg px-2 ${
                 pathname === link.href
-                  ? 'text-navy-900 bg-gold-50'
-                  : 'text-gray-700 hover:text-navy-900 hover:bg-surface-50'
+                  ? 'text-navy-900 dark:text-white bg-gold-50 dark:bg-navy-800'
+                  : 'text-gray-700 dark:text-gray-300 hover:text-navy-900 dark:hover:text-white hover:bg-surface-50 dark:hover:bg-navy-800'
               }`}
               onClick={() => setMenuOpen(false)}
             >
               {link.label}
             </Link>
           ))}
-          <div className="pt-2 border-t border-surface-border flex flex-col gap-2 mt-1">
+          <div className="pt-2 border-t border-surface-border dark:border-navy-700 flex flex-col gap-2 mt-1">
             {userEmail ? (
               <>
-                <Link href="/dashboard" className="text-sm text-gray-700 font-medium py-2 px-2" onClick={() => setMenuOpen(false)}>내 플래너</Link>
-                <button onClick={handleSignOut} className="text-sm text-gray-500 text-left py-2 px-2">로그아웃</button>
+                <Link href="/dashboard" className="text-sm text-gray-700 dark:text-gray-300 font-medium py-2 px-2" onClick={() => setMenuOpen(false)}>내 플래너</Link>
+                <button onClick={handleSignOut} className="text-sm text-gray-500 dark:text-gray-400 text-left py-2 px-2">로그아웃</button>
               </>
             ) : (
               <>
-                <Link href="/login" className="text-sm text-gray-700 py-2 px-2" onClick={() => setMenuOpen(false)}>로그인</Link>
+                <Link href="/login" className="text-sm text-gray-700 dark:text-gray-300 py-2 px-2" onClick={() => setMenuOpen(false)}>로그인</Link>
                 <Link
                   href="/login?signup=1"
                   className="text-sm bg-cta-gradient text-navy-950 font-semibold px-4 py-2 rounded-full text-center shadow-cta"

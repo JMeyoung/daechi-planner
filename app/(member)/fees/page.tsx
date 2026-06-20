@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { CHILD_COLORS, BADGE_COLOR, DOT_COLOR } from '@/lib/child-colors'
+import { exportFeesToExcel } from '@/lib/export-excel'
 import type { AcademyFee, ChildProfile } from '@/types'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -180,6 +181,11 @@ export default function FeesPage() {
     setFees(prev => prev.map(f => f.id === fee.id ? { ...f, is_active: !f.is_active } : f))
   }
 
+  function handleExport() {
+    const filename = `대치플래너_학원비_${new Date().getFullYear()}년${new Date().getMonth() + 1}월.xlsx`
+    exportFeesToExcel(fees, children, filename)
+  }
+
   const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400'
 
   if (loading) return <div className="flex items-center justify-center h-40"><div className="w-6 h-6 border-2 border-navy-200 border-t-navy-800 rounded-full animate-spin" /></div>
@@ -188,9 +194,14 @@ export default function FeesPage() {
     <div className="max-w-lg space-y-5">
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-bold text-gray-900">학원비 관리</h1>
-        <button onClick={startAdd} className="text-sm bg-navy-800 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-navy-900 transition-colors">
-          + 추가
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={handleExport} className="text-sm bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+            📥 내보내기
+          </button>
+          <button onClick={startAdd} className="text-sm bg-navy-800 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-navy-900 transition-colors">
+            + 추가
+          </button>
+        </div>
       </div>
 
       {/* 납부일 알림 */}

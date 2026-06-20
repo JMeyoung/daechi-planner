@@ -13,14 +13,14 @@
   }
 
   body {
-    @apply text-gray-900 bg-white font-sans antialiased;
+    @apply text-gray-900 bg-white font-sans antialiased dark:bg-navy-950 dark:text-gray-100 transition-colors duration-300;
   }
 
   /* Refined scrollbar */
   ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 99px; }
-  ::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+  ::-webkit-scrollbar-thumb { @apply bg-gray-200 dark:bg-navy-800 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-gray-300 dark:bg-navy-700; }
 
   /* Reduced motion — disable all animations */
   @media (prefers-reduced-motion: reduce) {
@@ -37,19 +37,19 @@
 @layer utilities {
   /* ── Typography ─────────────────────────── */
   .prose-content h2 {
-    @apply text-xl font-bold mt-8 mb-3;
+    @apply text-xl font-bold mt-8 mb-3 dark:text-white;
   }
   .prose-content h3 {
-    @apply text-lg font-semibold mt-6 mb-2;
+    @apply text-lg font-semibold mt-6 mb-2 dark:text-gray-100;
   }
   .prose-content p {
-    @apply leading-[1.85] mb-4 text-gray-700;
+    @apply leading-[1.85] mb-4 text-gray-700 dark:text-gray-300;
   }
   .prose-content ul {
-    @apply list-disc pl-5 mb-4 space-y-1;
+    @apply list-disc pl-5 mb-4 space-y-1 dark:text-gray-300;
   }
   .prose-content li {
-    @apply text-gray-700 leading-relaxed;
+    @apply text-gray-700 leading-relaxed dark:text-gray-300;
   }
 
   /* ── Hero noise overlay ─────────────────── */
@@ -60,9 +60,9 @@
 
   /* ── Card lift ───────────────────────────── */
   .card-lift {
-    @apply bg-white rounded-2xl shadow-card border border-surface-border
+    @apply bg-white dark:bg-navy-800 rounded-2xl shadow-card dark:shadow-none border border-surface-border dark:border-navy-700
            transition-all duration-200 ease-out
-           hover:-translate-y-1 hover:shadow-card-hover hover:border-gold-200;
+           hover:-translate-y-1 hover:shadow-card-hover dark:hover:border-gold-400/50 hover:border-gold-200;
   }
   .card-lift:active {
     @apply translate-y-0 shadow-card;
