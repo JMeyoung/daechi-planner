@@ -40,7 +40,28 @@ export default function AiReportWidget({ childrenProfiles }: { childrenProfiles:
     }
   }
 
-  if (childrenProfiles.length === 0) return null
+  if (childrenProfiles.length === 0) {
+    return (
+      <div className="bg-gradient-to-br from-navy-900 to-navy-800 rounded-2xl p-5 text-white animate-fade-up border border-navy-700 shadow-xl relative overflow-hidden">
+        <div className="absolute -right-10 -top-10 w-40 h-40 bg-gold-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-xl">✨</span>
+            <h2 className="font-bold text-lg text-white">AI 학습 분석 리포트</h2>
+          </div>
+          <p className="text-sm text-navy-200 mb-4">
+            자녀를 등록하시면, 대치동 교육 컨설턴트 AI가 스케줄과 성적을 분석하여 맞춤형 학원을 추천해 드립니다.
+          </p>
+          <a
+            href="/settings"
+            className="inline-block bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold py-2.5 px-4 rounded-xl transition-colors text-sm"
+          >
+            자녀 등록하러 가기 →
+          </a>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-gradient-to-br from-navy-900 to-navy-800 rounded-2xl p-5 text-white animate-fade-up border border-navy-700 shadow-xl relative overflow-hidden">
