@@ -127,9 +127,7 @@ export default function AiReportWidget({ childrenProfiles }: { childrenProfiles:
               )}
 
               {report && (
-                <div className="prose dark:prose-invert prose-sm max-w-none 
-                                prose-headings:text-navy-800 dark:prose-headings:text-gold-400
-                                prose-strong:text-gold-600 dark:prose-strong:text-gold-300">
+                <div className="prose-content text-sm max-w-none">
                   <ReactMarkdown>{report}</ReactMarkdown>
                 </div>
               )}
